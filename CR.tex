@@ -1,0 +1,145 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{TRAVAIL D'ETUDE ET DE RECHERCHE
+ETUDE ET MODELISATION
+DE LA FLEXION SUR 
+DES SKIS}
+
+\author{Noah RUCHAUD--LANDRAUD\\ Martin POTAGNIK\\Samuel RENAULT\\ Seydou SECK \\\\Tuteurs : Olivier CATY - Marc DURUFLE}
+
+
+\date{Année Scolaire 2025-2026}
+
+
+\maketitle
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.32\textwidth]{IMG_2654.png}
+    \includegraphics[width=0.32\textwidth]{IMG_2655.png}
+    \includegraphics[width=0.32\textwidth]{IMG_2656.png}
+    \caption{Récapitulatif de la séance 1 : (a) Ojectifs semestriels, (b) Carte mentale du projet, (c) Avancée travail hebdomadaire}
+    \label{fig:flexion_ski}
+\end{figure}
+
+\usepackage{graphicx}
+
+\section{\textbf{Idée plan de travail et d'avancée}}
+
+\subsection{Modélisation mécanique du ski comme poutre (Théorie)}
+
+\begin{itemize}
+  \item Traitement du ski comme une \textbf{poutre} (linéaire ou non), avec une raideur en flexion $EI(x)$ variable selon la position $x$.
+  \item Étude du \textbf{couplage torsion / flexion} : introduction du terme de raideur $GJ$ pour la torsion, pertinent si le ski est soumis à un moment de torsion en plus de la flexion.
+  \item Analyse des \textbf{hypothèses de base} : petites déformations, comportement linéaire, homogénéité des matériaux.
+  \item Discussion sur les \textbf{limites du modèle} : effets non-linéaires, anisotropie, hétérogénéité des couches.
+\end{itemize}
+\newpage
+\subsection{Mesure expérimentale de la flexion et de la rigidité (Réalité)}
+
+\begin{itemize}
+  \item Réalisation d'essais en \textbf{flexion 3 points, 4 points} ou avec appuis multiples pour déterminer le profil de raideur du ski. Idée de base avec la réalisation de l'exercice 1 du TD de RDM au préalable numériquement.
+  \item Application de \textbf{charges connues} et mesure de la \textbf{déflexion} correspondante.
+  \item Utilisation de \textbf{capteurs} (déplacement, jauges de contrainte, LVDT, capteurs de déformation) placés le long du ski. A voir si le matériel et si des capteurs sont disponibles au CRMI
+  \item Comparaison des \textbf{données expérimentales} calculées avec les \textbf{modèles analytiques et numériques} qu'on trouverait en bibliographie sur Internet.
+\end{itemize}
+
+\subsection{Effet de la liaison ski-chaussure}
+
+\begin{itemize}
+  \item Étude de la manière dont la \textbf{fixation} et la \textbf{rigidité de la chaussure} influencent la distribution des efforts dans le ski.
+  \item Analyse du \textbf{transfert des moments de flexion} de la chaussure vers le ski.
+  \item Étude de l'\textbf{interaction du système complet} (skieur + chaussure + ski).
+  \item   Etude en cas de \textbf{variations du sol} (bosses)
+
+\end{itemize}
+
+\subsection{Comportement en conditions réelles (dynamique)}
+
+\begin{itemize}
+  \item Mesure de la \textbf{déflexion du ski en mouvement} pendant les virages, à l’aide de capteurs embarqués (semble beaucoup plus difficile à réaliser expérimentalement).
+  \item Étude de l’influence de la \textbf{vitesse}, de l’\textbf{angle d’attaque} et de la \textbf{charge dynamique}(mouvements du skieur, vibration du ski, changement de contact avec la neige).
+  \item Analyse de l'importance de la position de la projection du \textbf{centre de gravité du skieur sur le ski} .
+  \item Analyse des effets de \textbf{fatigue}, de \textbf{non-linéarité} et de la \textbf{variation des conditions de neige}.
+\end{itemize}
+
+\subsection{Optimisation et conception du ski selon la flexibilité}
+
+\begin{itemize}
+  \item Choix de \textbf{profils de raideur} adaptés. (Exemple : ski plus rigide au centre et plus souple aux extrémités.)
+  \item Étude de l’influence du \textbf{profil en plan}, de la \textbf{section transversale} et des \textbf{matériaux}.
+  \item Intégration des \textbf{contraintes de fabrication}, du \textbf{poids global} et du \textbf{comportement dynamique global}.
+  \item \textbf{Objectif final} sur l'impact du \textbf{choix du ski }pour la pratique (loisirs, compétition)
+\end{itemize}
+
+\section{\textbf{Formules importantes de Flexion}}
+
+\begin{itemize}
+    \item Flèche à l'extrémité libre
+
+    \[
+\delta_{\text{max}} \;=\; \frac{F\,L^{3}}{3\,E\,I}
+\]
+
+où :
+\begin{itemize}
+  \item $\delta_{\text{max}}$ est la flèche maximale à l'extrémité libre de la poutre,
+  \item $F$ est la force appliquée à l’extrémité libre,
+  \item $L$ est la longueur de la poutre,
+  \item $E$ est le module d’Young du matériau,
+  \item $I$ est le moment quadratique de la section droite de la poutre.
+\end{itemize}
+
+\begin{itemise}
+    \item Relation entre le moment de flexion et l'effort tranchant
+
+    \[
+\dv{M_{fz}(x)}{x} = T_y(x)
+\]
+
+où :
+\begin{itemize}
+  \item $M_{fz}(x)$ est le \textbf{moment de flexion} autour de l’axe $z$,
+  \item $T_y(x)$ est l’\textbf{effort tranchant} selon l’axe $y$.
+\end{itemize}
+
+\noindent
+Cette relation traduit l’\textbf{équilibre interne des efforts} dans une poutre fléchie :
+
+\begin{itemise}
+    \item Equation de la déformée pour une poutre encastrée
+
+% Déformée d'une poutre encastrée (charge ponctuelle F à l'extrémité libre)
+\[
+y(x) \;=\; \frac{1}{E I(g,z)}
+\Bigl(
+-\frac{F}{6}\,(L-x)^{3}
+-\frac{F L^{2}}{2}\,x
++\frac{F L^{3}}{6}
+\Bigr)
+\]
+
+% Forme équivalente (classique) :
+\[
+y(x) \;=\; -\,\frac{F}{6\,E I(g,z)}\,x^{2}\bigl(3L - x\bigr)
+\]
+
+% Rappel des conditions aux limites (encastrement en x=0)
+\[
+y(0)=0, \qquad y'(0)=0
+\]
+
+Elle est déterminée à partir de 
+  \[
+y''(x) \;=\; \frac{F\,L^{3}}{3\,E\,I}
+\]
+
+\section{\textbf{Références bibliographiques}}
+\noindent
+\\
+https://soothski.com/proprietes-skis-expliquees/2021/ski-longueur-sidecut-rayon-rockers-flexion-torsion-complique/?lang=fr \\\\\\
+https://www.glissattitude.com/blog/ski-alpin-et-racing-11/souplesse-et-rigidite-des-skis-4737 \\\\\\
+https://theses.insa-lyon.fr/publication/1986ISAL0006/these.pdf
+
+\end{document}
