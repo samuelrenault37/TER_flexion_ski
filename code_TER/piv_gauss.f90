@@ -1,6 +1,6 @@
 program inv_matrix
     implicit none
-    integer, parameter :: PR = 8, N = 1000
+    integer, parameter :: PR = 8, N = 5
     real(PR) :: epsilon = 1.d-10, facteur
     real(PR), dimension(N,N) :: A, Id
     integer :: i, j, k

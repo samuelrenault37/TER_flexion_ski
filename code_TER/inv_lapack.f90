@@ -1,6 +1,6 @@
 program inverse_matrix
     implicit none
-    integer, parameter :: n = 2000, PR = 8
+    integer, parameter :: n = 10, PR = 8
     integer :: info, lda, lwork, i, ipiv(n)
     real(PR), dimension(n,n) :: A
     real(PR), dimension(3*n) :: work
