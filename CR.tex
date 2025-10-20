@@ -1,19 +1,49 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{left=2.5cm, right=2.5cm, top=3cm, bottom=2.5cm, headsep=40pt}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{textgreek}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{subcaption}
+\usepackage{physics} % pour \dv et cie
 
-\title{TRAVAIL D'ETUDE ET DE RECHERCHE
-ETUDE ET MODELISATION
-DE LA FLEXION SUR 
-DES SKIS}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\includegraphics[height=1cm]{logo_em.jpg}}
+\fancyhead[R]{MM1 Groupe 3}
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}}
 
-\author{Noah RUCHAUD--LANDRAUD\\ Martin POTAGNIK\\Samuel RENAULT\\ Seydou SECK \\\\Tuteurs : Olivier CATY - Marc DURUFLE}
+\begin{document}
 
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.5\textwidth]{logo_em.jpg}\\[5cm]
+    
+    {\LARGE \textbf{Travail d'Etude et de Recherche}}\\[0.3cm]
+    {\large \textbf{Etude de la flexion sur des skis}}\\[1.5cm]
+    {\large \textbf{Rapport}}\\[0.5cm]
+    {\large \textbf{MM Groupe 1}}\\[7cm]
+    
+\\
+    RUCHAUD--LANDRAUD Noah - SECK Seydou \\ RENAULT Samuel - POTAGNIK Martin\\[0.5cm]
+    
+    {\large \textbf{Tuteurs :} CATY Olivier - DURUFLE Marc}\\[2cm]
+    
+    {\large \textbf{Année 2025-2026}}
+\end{titlepage}
 
-\date{Année Scolaire 2025-2026}
-
-
-\maketitle
-
+% \maketitle  % (inutile avec la titlepage personnalisée)
+\\\\
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.32\textwidth]{IMG_2654.png}
@@ -22,8 +52,6 @@ DES SKIS}
     \caption{Récapitulatif de la séance 1 : (a) Ojectifs semestriels, (b) Carte mentale du projet, (c) Avancée travail hebdomadaire}
     \label{fig:flexion_ski}
 \end{figure}
-
-\usepackage{graphicx}
 
 \section{\textbf{Idée plan de travail et d'avancée}}
 
@@ -35,7 +63,7 @@ DES SKIS}
   \item Analyse des \textbf{hypothèses de base} : petites déformations, comportement linéaire, homogénéité des matériaux.
   \item Discussion sur les \textbf{limites du modèle} : effets non-linéaires, anisotropie, hétérogénéité des couches.
 \end{itemize}
-\newpage
+
 \subsection{Mesure expérimentale de la flexion et de la rigidité (Réalité)}
 
 \begin{itemize}
@@ -52,7 +80,6 @@ DES SKIS}
   \item Analyse du \textbf{transfert des moments de flexion} de la chaussure vers le ski.
   \item Étude de l'\textbf{interaction du système complet} (skieur + chaussure + ski).
   \item   Etude en cas de \textbf{variations du sol} (bosses)
-
 \end{itemize}
 
 \subsection{Comportement en conditions réelles (dynamique)}
@@ -91,7 +118,6 @@ où :
   \item $I$ est le moment quadratique de la section droite de la poutre.
 \end{itemize}
 
-\begin{itemise}
     \item Relation entre le moment de flexion et l'effort tranchant
 
     \[
@@ -107,7 +133,6 @@ où :
 \noindent
 Cette relation traduit l’\textbf{équilibre interne des efforts} dans une poutre fléchie :
 
-\begin{itemise}
     \item Equation de la déformée pour une poutre encastrée
 
 % Déformée d'une poutre encastrée (charge ponctuelle F à l'extrémité libre)
@@ -134,6 +159,105 @@ Elle est déterminée à partir de
   \[
 y''(x) \;=\; \frac{F\,L^{3}}{3\,E\,I}
 \]
+\end{itemize}
+
+\section{\textbf{Methodes numériques}}
+
+L’objectif de cette partie est de modéliser la flexion du ski à l’aide d’outils numériques, afin de relier les équations théoriques de la poutre à des solutions approchées calculables.  
+Pour cela, nous utiliserons la \textbf{méthode des différences finies}, qui permet de discrétiser les équations différentielles régissant la flexion et d’obtenir un système linéaire reliant les grandeurs mécaniques du ski.  
+Ce travail constitue la première étape de modélisation numérique réalisée au semestre~5, avant d’exploiter, au semestre~6, les différents \textbf{solveurs numériques} qui permettront de résoudre efficacement les systèmes obtenus.
+
+\subsection{Différences finies}
+
+La méthode des différences finies est une méthode numérique permettant d'approcher
+les solutions d'équations différentielles à l'aide d'équations algébriques.
+L'idée principale est de remplacer les dérivées par des \textit{différences}
+calculées à partir de valeurs de la fonction sur un ensemble discret de points.
+
+\subsubsection{Principe général}
+
+Soit une fonction $y(x)$ définie sur un intervalle $[a,b]$.
+On choisit un nombre $N$ de points de discrétisation appelés \textit{nœuds} :
+\[
+x_0 = a,\quad x_1 = a + h,\quad x_2 = a + 2h,\quad \dots,\quad x_N = b,
+\]
+où $h = \dfrac{b - a}{N}$ est le pas du maillage.
+
+\subsubsection{Forme de Newton (différences divisées)}
+
+Soient des n\oe{}uds distincts $x_0,\dots,x_n$ et la notation de \textbf{différences divisées} :
+\[
+f[x_i] = f(x_i),\qquad
+f[x_i,\dots,x_{i+k}] = \frac{f[x_{i+1},\dots,x_{i+k}] - f[x_i,\dots,x_{i+k-1}]}{x_{i+k}-x_i}.
+\]
+
+On définit la \textbf{base de Newton} :
+\[
+N_0(x)=1,\qquad
+N_k(x)=\prod_{j=0}^{k-1}(x-x_j)\quad (k\ge 1).
+\]
+
+Ainsi on obtient la \textbf{forme finale du polynôme d'interpolation de Newton} :
+\[
+\boxed{
+P_n(x)= f[x_0] + \sum_{k=1}^{n} f[x_0,\dots,x_k]\; N_k(x)
+= \sum_{k=0}^{n} c_k\,N_k(x)
+}
+\]
+avec 
+\[
+c_0=f[x_0],\quad c_1=f[x_0,x_1],\quad \dots,\quad c_n=f[x_0,\dots,x_n].
+\]
+
+\subsubsection{Écriture matricielle au niveau des n\oe{}uds.}
+En évaluant $P_n$ aux n\oe{}uds $x_i$, on obtient le système :
+\[
+\underbrace{\begin{pmatrix}
+N_0(x_0) & 0            & \cdots & 0 \\
+N_0(x_1) & N_1(x_1)     & \cdots & 0 \\
+\vdots   & \vdots       & \ddots & \vdots \\
+N_0(x_n) & N_1(x_n)     & \cdots & N_n(x_n)
+\end{pmatrix}}_{\displaystyle A}
+\underbrace{\begin{pmatrix} c_0 \\ c_1 \\ \vdots \\ c_n \end{pmatrix}}_{\displaystyle \mathbf{c}}
+=
+\underbrace{\begin{pmatrix} f(x_0) \\ f(x_1) \\ \vdots \\ f(x_n) \end{pmatrix}}_{\displaystyle \mathbf{f}}
+\quad\Longleftrightarrow\quad
+A\,\mathbf{c}=\mathbf{f}.
+\]
+
+\noindent
+Ici $A$ est \textbf{triangulaire inférieure} (dite matrice de Newton) car $N_k(x_i)=0$ pour $i<k$.  
+Elle s’inverse facilement (tous les $x_i$ distincts $\Rightarrow \det(A)\neq 0$).
+
+\subsubsection{Avantages et limites}
+
+\paragraph{Avantages :}
+\begin{itemize}
+  \item Méthode simple à mettre en œuvre numériquement ;
+  \item Bonne précision pour des maillages fins ($h$ petit) ;
+  \item Convient bien aux géométries régulières (segments, carrés, cubes).
+\end{itemize}
+
+\paragraph{Limites :}
+\begin{itemize}
+  \item Moins adaptée aux géométries complexes ;
+  \item La précision dépend fortement du pas $h$ ;
+  \item Les conditions aux limites doivent être imposées avec soin.
+\end{itemize}
+
+\subsection{Solveurs numériques}
+
+Les méthodes de différences finies conduisent à un système linéaire de la forme :
+\[
+A \, y = b,
+\]
+où $A$ est la matrice d'interaction entre les points de discrétisation, $y$ le vecteur des déformations, et $b$ le vecteur du chargement.
+
+Pour résoudre ce système, on utilise un \textbf{solveur numérique}. Il existe deux grandes familles :
+\begin{itemize}
+\item les \textbf{solveurs directs}, comme l’élimination de Gauss ou la décomposition LU, qui fournissent une solution exacte après un nombre fini d’opérations ;
+  \item les \textbf{solveurs itératifs}, comme les méthodes de Jacobi, Gauss–Seidel ou Gradient Conjugué, qui construisent la solution progressivement jusqu’à convergence.
+\end{itemize}
 
 \section{\textbf{Références bibliographiques}}
 \noindent
