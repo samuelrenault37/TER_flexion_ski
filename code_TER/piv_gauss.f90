@@ -54,7 +54,7 @@ program inv_matrix
         real(PR),dimension(N,N), intent(in) :: Mat
         integer, intent(in) ::  n
         integer :: i
-        do i = 1,N
+        do i = 1,n
             print *, Mat(i,:)
         end do
     end subroutine aff_matrix
