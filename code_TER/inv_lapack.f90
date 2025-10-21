@@ -40,7 +40,7 @@ program inverse_matrix
 contains
 
     subroutine aff_matrix(Mat, n)
-        real(PR),dimension(n,n), intent(in) :: Mat
+        real(PR),dimension(N,N), intent(in) :: Mat
         integer, intent(in) ::  n
         integer :: i
         do i = 1,n
