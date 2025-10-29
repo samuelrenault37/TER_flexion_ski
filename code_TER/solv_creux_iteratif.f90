@@ -1,6 +1,7 @@
 program solveur_creux
   implicit none
-  integer, parameter :: PR = 8 , N = 5
+  integer, parameter :: PR = 8 , N = 2000 ! 2000 max sinon on atteint des valeurs trop grandes donc fausses (on plafonne)
+  real(PR) :: borne_a, borne_b, h, xa, xb
 
   ! Matrice creuse en format CSR
   integer, parameter :: NN = (N-2)*3 + 4  !nombre de valeurs non nulles
@@ -12,6 +13,13 @@ program solveur_creux
   real(PR) :: alpha, beta, rho_cur, rho_new
   integer :: i, k, max_iter
   real(PR) :: epsilon
+
+  ! intialisation des bornes, du pas de discrétisation et des CL (nul ici sinon jsp comment ça marche)
+  borne_a = 0
+  xa = 0
+  borne_b = 1
+  xb = 0
+  h = (borne_b-borne_a)/(N+1)
 
   ! Initialisation de la matrice au format CSR pour toute taille N de matrice
 
@@ -35,6 +43,8 @@ program solveur_creux
   A_col(NN) = N
   A_val(NN-1) = 1
   A_val(NN) = -2
+
+  A_val = (1/h**2) * A_val
 
   ! Second membre b
   b = 2
@@ -63,10 +73,7 @@ program solveur_creux
      rho_cur = rho_new
   end do
 
-  print *, "Solution après ", k, " itérations :"
-  do i = 1, N
-     print *, x(i)
-  end do
+  call write_in_file("../doc/res_solv_creux.txt", x, N, h, borne_a, borne_b, xa, xb)
 
 contains
   ! calcul le produit matriciel entre une matrice sous format CSR et un vecteur (ne tenant donc pas compte des 0 de la matrice)
@@ -85,5 +92,21 @@ contains
        end do
     end do
   end subroutine matvec_csr
+
+  ! écrit les valeurs utiles dans un fichier texte pour pouvoir les exploiter avec gnuplot (tracé de courbe)
+  subroutine write_in_file(file, x, N, h, a, b, xa, xb)
+    character(len=*), intent(in) :: file
+    real(PR), dimension(:), intent(in) ::  x
+    integer, intent(in) :: N
+    real(PR), intent(in) :: h, a, b, xa, xb
+
+    open(unit = 1, file = file, action = "write")
+    write (1, '(A)') "#abscisse               ordonnée"
+    write (1, *) a , xa
+    do i = 1,N
+      write (1, *) a + (i)*(h), x(i)
+    end do
+    write (1, *) b , xb
+  end subroutine write_in_file
 
 end program solveur_creux

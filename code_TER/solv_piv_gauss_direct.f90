@@ -1,11 +1,19 @@
 program inv_matrix
     implicit none
-    integer, parameter :: PR = 8, N = 5
+    integer, parameter :: PR = 8, N = 500 !limité par le temps de calcul plutôt que par l'echelle des valeurs manipulées
+    real(PR) :: borne_a, borne_b, h, xa, xb
     real(PR), parameter :: epsilon = 1.d-10
     real(PR) :: facteur
     real(PR), dimension(N,N) :: A, Id
     real(PR), dimension(N) :: x, b
     integer :: i, j, k
+
+    ! intialisation des bornes, du pas de discrétisation et des CL (nul ici sinon jsp comment ça marche)
+    borne_a = 0
+    xa = 0
+    borne_b = 1
+    xb = 0
+    h = (borne_b-borne_a)/(N+1)
 
     ! initialisation de A et Id
     Id = 0
@@ -26,7 +34,7 @@ program inv_matrix
     ! Méthode du pivot de Gauss
     do i = 1,N
         if(ABS(A(i,i)) < epsilon) then
-            print *, "pas inevrsible avec cette méthode"
+            print *, "pas ineversible avec cette méthode"
         end if
 
         facteur = A(i,i)
@@ -53,9 +61,7 @@ program inv_matrix
 
     x = MATMUL(Id, b)
 
-    do i = 1, N
-     print *, x(i)
-    end do
+    call write_in_file("../doc/res_solv_piv.txt", x, N, h, borne_a, borne_b, xa, xb)
 
     contains
 
@@ -67,5 +73,21 @@ program inv_matrix
             print *, Mat(i,:)
         end do
     end subroutine aff_matrix
+
+    ! écrit les valeurs utiles dans un fichier texte pour pouvoir les exploiter avec gnuplot (tracé de courbe)
+    subroutine write_in_file(file, x, N, h, a, b, xa, xb)
+        character(len=*), intent(in) :: file
+        real(PR), dimension(:), intent(in) ::  x
+        integer, intent(in) :: N
+        real(PR), intent(in) :: h, a, b, xa, xb
+
+        open(unit = 1, file = file, action = "write")
+        write (1, '(A)') "#abscisse               ordonnée"
+        write (1, *) a , xa
+        do i = 1,N
+        write (1, *) a + (i)*(h), x(i)*h**2
+        end do
+        write (1, *) b , xb
+    end subroutine write_in_file
     
     end program inv_matrix
