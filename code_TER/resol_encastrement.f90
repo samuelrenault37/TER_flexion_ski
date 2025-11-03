@@ -28,7 +28,7 @@ program flexion_poutre
     ! Conditions pour les 2 dernières lignes de matrice
     A(N, N-2) =  1._PR
     A(N, N-1) = -2._PR
-    A(N, N)   =  1.PR
+    A(N, N)   =  1._PR
 
     A(N+1, N-3) = -1._PR
     A(N+1, N-2) =  3._PR
@@ -47,7 +47,55 @@ program flexion_poutre
         b(i)      = 0._PR
     end do
 
+    ! Résolution
     
+    call gauss(A,b,y,N+1)
+    
+    print*, "i","x(i)","y(i)"
+    do i = 1, N+1
+        print*, i, (i-1)*h, y(i)
+    end do
+
+    contains
+
+    subroutine gauss(A, b, x, N)
+    
+        implicit none
+        
+        integer, intent(in)     :: N
+        real(PR), intent(inout) :: A(N,N)
+        real(PR), intent(inout) :: b(N)
+        real(PR), intent(out)   :: x(N)
+        real(PR)                :: facteur, epsilon
+        integer                 :: i, k
+
+        epsilon = 1.d-12
+        x = 0._PR
+
+        
+        do i = 1,N
+            if(ABS(A(i,i)) < epsilon) then
+                print *, "pas ineversible avec cette méthode"
+            end if
+
+
+            facteur = A(i,i)
+            A(i,:) = A(i,:) / facteur
+            b(i) = b(i) / facteur
+
+            do k = 1, N
+                if (k /= i) then
+                    facteur = A(k,i)
+                    A(k,:) = A(k,:) - facteur * A(i,:)
+                    b(k) = b(k) - facteur * b(i)
+                end if
+            end do
+        end do
+
+        x = b
+        
+    end subroutine gauss
+
 
     
-end program flexion
+end program flexion_poutre
