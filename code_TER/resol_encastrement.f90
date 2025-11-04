@@ -8,6 +8,7 @@ program flexion_poutre
     real(PR), dimension(N+1,N+1) :: A
     real(PR), dimension(N+1)     :: b, y
     integer                      :: i
+    real(PR)                     :: yi_exact, err_max, ymax_exact, err_rel
 
     L = 1._PR
     E = 1._PR
@@ -55,6 +56,22 @@ program flexion_poutre
     do i = 1, N+1
         print*, i, (i-1)*h, y(i)
     end do
+
+        ! Vérification de la convergence numérique
+    
+    err_max = 0._PR
+    ymax_exact = 0._PR
+
+    do i = 1, N+1
+        yi_exact = (F/(6._PR*E*I)) * ((real(i-1,PR)*h)**2) * (3._PR*L - real(i-1,PR)*h)
+        err_max = max(err_max, abs(y(i) - yi_exact))
+        ymax_exact = max(ymax_exact, abs(yi_exact))
+    end do
+
+    err_rel = err_max / max(ymax_exact, 1.e-30_PR)
+
+    print*, "Erreur relative maximale :", err_rel
+
 
     contains
 
