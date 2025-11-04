@@ -7,7 +7,7 @@ program flexion_poutre
     real(PR)                     :: L, E, F, I, h
     real(PR), dimension(N+1,N+1) :: A
     real(PR), dimension(N+1)     :: b, y
-    integer                      :: i
+    integer                      :: k
     real(PR)                     :: yi_exact, err_max, ymax_exact, err_rel
 
     L = 1._PR
@@ -39,22 +39,22 @@ program flexion_poutre
 
     ! Reste de la matrice A
 
-    do i=3, N-1
-        A(i,i-2) =  1._PR
-        A(i,i-1) = -4._PR
-        A(i,i)   =  6._PR
-        A(i,i+1) = -4._PR
-        A(i,i+2) =  1._PR
-        b(i)      = 0._PR
+    do k=3, N-1
+        A(k,k-2) =  1._PR
+        A(k,k-1) = -4._PR
+        A(k,k)   =  6._PR
+        A(k,k+1) = -4._PR
+        A(k,k+2) =  1._PR
+        b(k)      = 0._PR
     end do
 
     ! Résolution
     
     call gauss(A,b,y,N+1)
     
-    print*, "i","x(i)","y(i)"
-    do i = 1, N+1
-        print*, i, (i-1)*h, y(i)
+    print*, "k","x(k)","y(k)"
+    do k = 1, N+1
+        print*, k, (k-1)*h, y(k)
     end do
 
         ! Vérification de la convergence numérique
@@ -62,9 +62,9 @@ program flexion_poutre
     err_max = 0._PR
     ymax_exact = 0._PR
 
-    do i = 1, N+1
-        yi_exact = (F/(6._PR*E*I)) * ((real(i-1,PR)*h)**2) * (3._PR*L - real(i-1,PR)*h)
-        err_max = max(err_max, abs(y(i) - yi_exact))
+    do k = 1, N+1
+        yi_exact = (F/(6._PR*E*I)) * ((real(k-1,PR)*h)**2) * (3._PR*L - real(k-1,PR)*h)
+        err_max = max(err_max, abs(y(k) - yi_exact))
         ymax_exact = max(ymax_exact, abs(yi_exact))
     end do
 
@@ -84,27 +84,27 @@ program flexion_poutre
         real(PR), intent(inout) :: b(N)
         real(PR), intent(out)   :: x(N)
         real(PR)                :: facteur, epsilon
-        integer                 :: i, k
+        integer                 :: j, k
 
         epsilon = 1.d-12
         x = 0._PR
 
         
-        do i = 1,N
-            if(ABS(A(i,i)) < epsilon) then
+        do j = 1,N
+            if(ABS(A(j,j)) < epsilon) then
                 print *, "pas ineversible avec cette méthode"
             end if
 
 
-            facteur = A(i,i)
-            A(i,:) = A(i,:) / facteur
-            b(i) = b(i) / facteur
+            facteur = A(j,j)
+            A(j,:) = A(j,:) / facteur
+            b(j) = b(j) / facteur
 
             do k = 1, N
-                if (k /= i) then
-                    facteur = A(k,i)
-                    A(k,:) = A(k,:) - facteur * A(i,:)
-                    b(k) = b(k) - facteur * b(i)
+                if (k /= j) then
+                    facteur = A(k,j)
+                    A(k,:) = A(k,:) - facteur * A(j,:)
+                    b(k) = b(k) - facteur * b(j)
                 end if
             end do
         end do
