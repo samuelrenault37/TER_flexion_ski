@@ -1,6 +1,6 @@
 program solveur_creux
   implicit none
-  integer, parameter :: PR = 8 , N = 2000 ! 2000 max sinon on atteint des valeurs trop grandes donc fausses (on plafonne)
+  integer, parameter :: PR = 8 , N = 2000 ! 2000 max sinon on atteint des valeurs trop grandes donc tronqué (pas sûr de l'explication)
   real(PR) :: borne_a, borne_b, h, xa, xb
 
   ! Matrice creuse en format CSR
