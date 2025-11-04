@@ -88,6 +88,7 @@ program inv_matrix
         write (1, *) a + (i)*(h), x(i)*h**2
         end do
         write (1, *) b , xb
+        close(1)
     end subroutine write_in_file
     
     end program inv_matrix
