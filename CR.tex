@@ -116,12 +116,37 @@ où :
   \item $L$ est la longueur de la poutre,
   \item $E$ est le module d’Young du matériau,
   \item $I$ est le moment quadratique de la section droite de la poutre.
+\\\\
+\textbf{Demonstration :}
+\[
+\{ \tau \} =  \left\{\begin{matrix}
+-F\vec y \\
+-F(L-x)\vec z
+\end{matrix}\right\}_{G(x)}
+\]
+On a : 
+\[EI\frac{d^2w(x)}{dx^2}=M_{fz}
+\implies EI\frac{d^2w(x)}{dx^2}=-F(L-x) \] D'où : 
+\[\frac{dw(x)}{dx}=-\frac{FL}{EI}x+\frac{F}{EI}\times\frac{x^2}{2}+A\]
+Et : 
+\[w(x)=-\frac{FLx^2}{2EI}+\frac{Fx^3}{6EI}+Ax+B\]
+C.L :
+\[\frac{dw}{dx}(0) \qquad \text{et}\qquad w(0)=0\]
+Donc : 
+\[w(x)=-\frac{FLx^2}{2EI}+\frac{Fx^3}{6EI}\]
+D'où : 
+\[\delta_{\max}=w(L)=\frac{FL^3}{3EI}\]
+
+
 \end{itemize}
 
     \item Relation entre le moment de flexion et l'effort tranchant
 
     \[
-\dv{M_{fz}(x)}{x} = T_y(x)
+\dv{M_{fz}(x)}{x} =EI.y'''(x)= T_y(x)
+\]
+avec \[
+M_{fz}(x) =EI.y''(x)
 \]
 
 où :
@@ -155,13 +180,13 @@ y(x) \;=\; -\,\frac{F}{6\,E I(g,z)}\,x^{2}\bigl(3L - x\bigr)
 y(0)=0, \qquad y'(0)=0
 \]
 
-Elle est déterminée à partir de 
+Ainsi, on a :
   \[
-y''(x) \;=\; \frac{F\,L^{3}}{3\,E\,I}
+y(L) \;=\; \frac{F\,L^{3}}{3\,E\,I}
 \]
 \end{itemize}
 
-\section{\textbf{Methodes numériques}}
+\section{\textbf{Méthodes numériques}}
 
 L’objectif de cette partie est de modéliser la flexion du ski à l’aide d’outils numériques, afin de relier les équations théoriques de la poutre à des solutions approchées calculables.  
 Pour cela, nous utiliserons la \textbf{méthode des différences finies}, qui permet de discrétiser les équations différentielles régissant la flexion et d’obtenir un système linéaire reliant les grandeurs mécaniques du ski.  
@@ -258,6 +283,186 @@ Pour résoudre ce système, on utilise un \textbf{solveur numérique}. Il existe
 \item les \textbf{solveurs directs}, comme l’élimination de Gauss ou la décomposition LU, qui fournissent une solution exacte après un nombre fini d’opérations;
   \item les \textbf{solveurs itératifs}, comme les méthodes de Jacobi, Gauss–Seidel ou Gradient Conjugué, qui construisent la solution progressivement jusqu’à convergence.
 \end{itemize}
+
+\section{Exemples}
+\subsection{Cas de la poutre encastrée}
+
+\subsubsection{Méthode Analytique}
+Dans ce cas d'étude, la poutre est \textbf{encastrée en $A$} et \textbf{libre en $B$}. 
+Une \textbf{force ponctuelle $F$} est appliquée verticalement vers le bas à l’extrémité libre $B$, située à la distance $L$ de l’encastrement. 
+
+\vspace{0.5em}
+
+\noindent
+L’équation générale de la flexion pour une poutre de raideur $EI$ est :
+\[
+EI\,y^{(4)}(x) = q(x)
+\]
+où $q(x)$ désigne la charge répartie le long de la poutre.  
+Ici, la charge étant \textbf{ponctuelle en $x=L$}, on a :
+\[
+EI\,y^{(4)}(x) = 0 \quad \text{pour } 0 \le x < L.
+\]
+
+\vspace{0.5em}
+
+Les \textbf{conditions aux limites} associées à ce problème sont alors :
+\[
+\begin{cases}
+y(0) = 0, & \text{(encastrement : déplacement nul)} \\[4pt]
+y'(0) = 0, & \text{(encastrement : pente nulle)} \\[4pt]
+y''(L) = 0, & \text{(moment nul à l’extrémité libre)} \\[4pt]
+EI\,y'''(L) = -F, & \text{(effort tranchant égal à la force appliquée $F$)} 
+\end{cases}
+\]
+
+\vspace{1em}
+
+\noindent
+\textbf{Détail physique précis :}  
+Sur toute la longueur de la poutre, il n’y a pas de charge répartie, donc la courbure $y''(x)$ varie linéairement.  
+L’effort tranchant $T_y(x)$ et le moment fléchissant $M_z(x)$ s’obtiennent à partir des dérivées successives de $y(x)$ :
+\[
+T_y(x) = EI\,y^{(3)}(x), \qquad M_z(x) = EI\,y''(x).
+\]
+On impose à l’extrémité libre $B$ l’équilibre :
+\[
+M_z(L) = 0, \qquad T_y(L) = -F.
+\]
+Ces conditions reflètent le fait que l’extrémité ne supporte pas de moment appliqué, mais subit la force ponctuelle $F$.
+
+\vspace{0.5em}
+
+\noindent
+L’encastrement en $A$ oppose à cette sollicitation une réaction d’effort tranchant $T_y(0)=F$ et un \textbf{moment de réaction $M_z(0)=F L$}, assurant ainsi l’équilibre global de la poutre.
+
+En intégrant 4 fois l'expression l'équation générale de la flexion on obtient :
+
+\[ EI.y(x) = \dfrac{A}{6}x^{3} + \dfrac{B}{2}x^{2} + Cx + D
+\]
+
+Et à l'aide des conditions aux limites, on retrouve l'équation :
+
+\[ EI.y(x) = \dfrac{-F}{6}x^{3} + \dfrac{FL}{2}x^{2} 
+\]
+
+\subsubsection{Méthode numérique}
+
+L'objectif est de trouver une valeur approchée de  $y_i \approx y(x_i)$ à l'aide de la méthode de Newton. 
+
+On découpe alors notre domaine $[0,L]$ en $N$ intervalles avec $h = \dfrac{L}{N}$
+
+À l’aide du développement de Taylor autour du point $x_i$, on peut approximer la dérivée quatrième par le schéma centré d’ordre~2 suivant :
+\[
+y^{(4)}(x_i) \approx \frac{y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2}}{h^4}.
+\]
+En remplaçant cette approximation dans l’équation différentielle de la flexion
+\[
+EI\,y^{(4)}(x) = 0,
+\]
+on obtient, pour chaque point intérieur du domaine :
+\[
+y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0.
+\]
+Cette relation relie la flèche $y_i$ en un point aux valeurs de ses voisins immédiats, et servira à construire la matrice du système linéaire. Cette relation s'applique à \textbf{tous les points extérieurs} excepté ceux proches des bords.
+
+Afin de résoudre le système, il est nécessaire de traduire les quatre conditions aux limites du problème continu sous forme discrète.\\\\\\\\\\\\\\\\
+
+\textbf{Lien entre les conditions aux limites et la formulation en DF}\\
+
+Ces conditions se traduisent, sur le maillage $\{x_i\}_{i=0}^N$ de pas $h = L/N$, par les relations suivantes :
+\[
+\begin{cases}
+y_0 = 0, & \text{(déplacement nul)} \\[6pt]
+\dfrac{y_1 - y_0}{h} = 0 \quad \Rightarrow \quad y_1 = y_0, & \text{(pente nulle)} \\[10pt]
+\dfrac{y_N - 2y_{N-1} + y_{N-2}}{h^2} = 0, & \text{(moment nul)} \\[12pt]
+EI\,\dfrac{y_N - 3y_{N-1} + 3y_{N-2} - y_{N-3}}{h^3} = -F. & \text{(effort tranchant appliqué)}
+\end{cases}
+\]
+\\
+\textbf{Forme matricielle du système linéaire}
+
+Ainsi, l’ensemble des équations discrètes issues du schéma de différences finies et des conditions aux limites peut s’écrire sous la forme matricielle suivante :
+\[
+A\,\mathbf{y} = \mathbf{b},
+\]
+où :
+\begin{itemize}
+  \item $A$ est la matrice des coefficients reliant chaque valeur discrète $y_i$ à ses voisins ;
+  \item $\mathbf{y} = (y_0, y_1, \dots, y_N)^{\mathsf{T}}$ est le vecteur des inconnues représentant les flèches discrétisées ;
+  \item $\mathbf{b}$ est le vecteur second membre, contenant les termes imposés par les conditions aux limites (ici uniquement le terme lié à la force $F$ en extrémité libre).
+\end{itemize}
+
+\paragraph{Structure de la matrice $A$.}
+Pour les points intérieurs ($i=2,\dots,N-2$), chaque équation est issue du schéma à cinq points :
+\[
+y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0.
+\]
+La matrice $A$ est donc \textbf{pentadiagonale} (à cinq bandes diagonales non nulles) : chaque ligne intérieure contient les coefficients $[1,\,-4,\,6,\,-4,\,1]$ centrés sur la colonne correspondant à $y_i$.
+
+\[
+A =
+\begin{pmatrix}
+1 & 0 & 0 & 0 & 0 & \cdots & 0 \\[3pt]
+-1 & 1 & 0 & 0 & 0 & \cdots & 0 \\[3pt]
+1 & -4 & 6 & -4 & 1 & \cdots & 0 \\[3pt]
+0 & 1 & -4 & 6 & -4 & 1 & \cdots \\[3pt]
+\vdots & & \ddots & \ddots & \ddots & \ddots & \\[3pt]
+0 & \cdots & 1 & -2 & 1 & 0 & 0 \\[3pt]
+0 & \cdots & -1 & 3 & -3 & 1 & 0
+\end{pmatrix}
+\]
+
+
+Les deux premières lignes imposent les conditions d’encastrement
+($y_0=0$, $y_1=y_0$),  
+les deux dernières traduisent les conditions à l’extrémité libre
+($y''(L)=0$, $EI\,y'''(L)=-F$).
+
+\paragraph{Vecteur second membre $\mathbf{b}$.}
+Comme la poutre n’est soumise à aucune charge répartie, tous les termes du second membre sont nuls sauf celui lié à la force ponctuelle $F$ en bout :
+\[
+\mathbf{b} =
+\begin{pmatrix}
+0 \\ 0 \\ \vdots \\ 0 \\[2pt] -\,\dfrac{F\,h^3}{EI}
+\end{pmatrix}
+\]
+
+
+La méthode numérique décrite précédemment a été implémentée à l’aide du langage \textsc{Fortran}~90.  
+\\
+
+
+La résolution du système est réalisée par la \textbf{méthode du pivot de Gauss}, permettant d’inverser la matrice $A$ et d’obtenir le vecteur des déformations $\mathbf{y}$.  
+Le code présent sur le Github \textsc{TER\_flexion\_ski} nommé \textsc{resol\_encastrement.f90} fournit la flèche discrète du ski pour chaque nœud du maillage, en fonction du pas $h = L/N$ choisi.
+\\
+Pour chaque nombre d’intervalles $N$, la solution numérique $\mathbf{y}_{\text{num}}$ à ensuite été comparée à la solution analytique $\mathbf{y}_{\text{exact}}$, et ainsi a pu être calculée l’\textbf{erreur relative maximale} :
+\\\\
+\[
+\varepsilon_{\text{rel}} = \frac{\max_i \big|y^{\text{num}}_i - y^{\text{exact}}(x_i)\big|}{\max_i \big|y^{\text{exact}}(x_i)\big|}.
+\]
+\\\\
+Cette erreur permet d’évaluer la convergence de la méthode lorsque le pas de discrétisation $h$ tend vers zéro.  
+\\\\
+Ainsi, voici pour différents $N$ fixé, les valeurs des erreurs relatives obtenues : 
+\\
+\begin{itemize}
+    \item[\textbullet]$N_1 = 10$ : $\varepsilon_{\text{rel}} = 0.415$
+    \item[\textbullet]$N_2 = 20$ : $\varepsilon_{\text{rel}} = 0.216$
+    \item[\textbullet]$N_3 = 40$ : $\varepsilon_{\text{rel}} = 0.110$
+    \item[\textbullet]$N_4 = 80$ : $\varepsilon_{\text{rel}} = 0.00557$
+    \item[\textbullet]$N_5 = 160$ : $\varepsilon_{\text{rel}} = 0.00280$
+\end{itemize}
+
+\vspace{1em}
+
+L’étude numérique réalisée a permis de vérifier le bon comportement de la méthode des différences finies pour la résolution de l’équation de flexion d’une poutre encastrée soumise à une charge ponctuelle.  
+Les résultats obtenus montrent que la flèche calculée numériquement reproduit fidèlement la forme attendue de la déformée, et que l’erreur relative diminue fortement lorsque le nombre de points de discrétisation $N$ augmente.  
+\\\\
+Cette première approche valide notre schéma numérique sur un cas simple. Elle servira de base à l’étude de cas plus complexes. 
+
+
+
 
 \section{\textbf{Références bibliographiques}}
 \noindent
