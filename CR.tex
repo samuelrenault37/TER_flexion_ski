@@ -20,7 +20,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\includegraphics[height=1cm]{logo_em.jpg}}
-\fancyhead[R]{MM1 Groupe 3}
+\fancyhead[R]{MM1 Groupe 1}
 \fancyfoot[C]{\thepage\ / \pageref{LastPage}}
 
 \begin{document}
@@ -28,13 +28,20 @@
 \begin{titlepage}
     \centering
     \includegraphics[width=0.5\textwidth]{logo_em.jpg}\\[5cm]
+
+    {\LARGE \textbf{
+Comment la répartition de la charge du skieur le long du ski
+influence-t-elle la courbure et la zone de flexion maximale ?
+}\par}
+\vspace{1.5cm}
+
+{\large \textbf{Rapport Travail d'Etude et de Recherche}\par}
+\vspace{0.3cm}
+
+{\large \textbf{MM1 Groupe 1}\par}
+\vspace{5.5cm}
+
     
-    {\LARGE \textbf{Travail d'Etude et de Recherche}}\\[0.3cm]
-    {\large \textbf{Etude de la flexion sur des skis}}\\[1.5cm]
-    {\large \textbf{Rapport}}\\[0.5cm]
-    {\large \textbf{MM Groupe 1}}\\[7cm]
-    
-\\
     RUCHAUD--LANDRAUD Noah - SECK Seydou \\ RENAULT Samuel - POTAGNIK Martin\\[0.5cm]
     
     {\large \textbf{Tuteurs :} CATY Olivier - DURUFLE Marc}\\[2cm]
@@ -42,8 +49,10 @@
     {\large \textbf{Année 2025-2026}}
 \end{titlepage}
 
-% \maketitle  % (inutile avec la titlepage personnalisée)
-\\\\
+\vspace{1.5cm}
+
+
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.32\textwidth]{IMG_2654.png}
@@ -53,7 +62,7 @@
     \label{fig:flexion_ski}
 \end{figure}
 
-\section{\textbf{Idée plan de travail et d'avancée}}
+\section{\textbf{Idée plan de travail et d'avancée n°1}}
 
 \subsection{Modélisation mécanique du ski comme poutre (Théorie)}
 
@@ -99,6 +108,53 @@
   \item Intégration des \textbf{contraintes de fabrication}, du \textbf{poids global} et du \textbf{comportement dynamique global}.
   \item \textbf{Objectif final} sur l'impact du \textbf{choix du ski }pour la pratique (loisirs, compétition)
 \end{itemize}
+
+\section{Idée plan de travail et d'avancée n°2}
+
+\subsection{Partie I : Modélisation 1D}
+
+\subsubsection{Modélisation mécanique 1D Théorique}
+\begin{itemize}
+    \item Hypothèses : poutre Euler--Bernoulli, petites déformations, rigidité en flexion $EI(x)$ variable.
+    \item Équations mécaniques internes :
+    \[
+        T'(x) = -q(x) \qquad M'(x) = T(x) \qquad M(x) = EI(x)\,y''(x)
+    \]
+    \item Cas théorique comparatif : flexion 4 points.
+    \item Expression théorique du moment fléchissant.
+    \item Intérêt du montage 4 points pour le cadre de la flexion de ski
+\end{itemize}
+
+\subsubsection{Approche expérimentale sur ski (Réalité)}
+\begin{itemize}
+    \item Présentation du montage expérimental réel sur un ski (appuis, charge, instrumentation).
+    \item Mesure de la déformée $y(x)$ sous charge.
+    \item Approximation du second gradient $y''(x)$.
+    \item Estimation expérimentale de la rigidité locale $EI(x)$.
+    \item (Comparaison qualitative avec le modèle théorique.) ???
+\end{itemize}
+
+\subsubsection{Approche numérique par méthode des Différences Finies}
+\begin{itemize}
+    \item Discrétisation du domaine : choix de $N$, pas $h$.
+    \item Approximation numérique de $y''(x)$.
+    \item Construction du système linéaire $A\,y = b$.
+    \item Implantation des conditions aux limites.
+    \item Résolution du système.
+    \item (Calcul de la solution numérique et comparaison à la solution théorique.) ???
+    \item Étude de convergence : évolution de l'erreur relative selon $h$.
+\end{itemize}
+
+\subsubsection{Discussion, limites et lien avec la problématique}
+\begin{itemize}
+    \item Comparaison : théorie vs expérimental vs numérique.
+    \item Interprétation mécanique des résultats.
+    \item Limites du modèle 1D (élasticité linéaire, absence de torsion, géométrie réelle du ski).
+    \item Justification de la nécessité d'un modèle 2D pour la suite.
+    \item Lien avec la problématique générale du TER.
+\end{itemize}
+
+
 
 \section{\textbf{Formules importantes de Flexion}}
 
@@ -153,12 +209,24 @@ où :
 \begin{itemize}
   \item $M_{fz}(x)$ est le \textbf{moment de flexion} autour de l’axe $z$,
   \item $T_y(x)$ est l’\textbf{effort tranchant} selon l’axe $y$.
+
 \end{itemize}
+\\
 
-\noindent
-Cette relation traduit l’\textbf{équilibre interne des efforts} dans une poutre fléchie :
+Cette relation traduit l’\textbf{équilibre interne des efforts} dans une poutre fléchie
 
-    \item Equation de la déformée pour une poutre encastrée
+\\
+\begin{itemize}
+\item Relation entre le moment fléchissant et la charge répartie :
+
+    \[
+\dv{T_{y}(x)}{x} =-q(x)
+\]
+où $q(x)$ est \textbf{la charge répartie}
+\end{itemize}
+\\
+
+\item Equation de la déformée pour une poutre encastrée :
 
 % Déformée d'une poutre encastrée (charge ponctuelle F à l'extrémité libre)
 \[
@@ -208,67 +276,77 @@ x_0 = a,\quad x_1 = a + h,\quad x_2 = a + 2h,\quad \dots,\quad x_N = b,
 \]
 où $h = \dfrac{b - a}{N}$ est le pas du maillage.
 
-\subsubsection{Forme de Newton (différences divisées)}
 
-Soient des n\oe{}uds distincts $x_0,\dots,x_n$ et la notation de \textbf{différences divisées} :
+\subsubsection{Développement de Taylor}
+
+Pour une fonction suffisamment régulière, son développement de Taylor en $x_i$
+donne, pour un pas $h$ :
 \[
-f[x_i] = f(x_i),\qquad
-f[x_i,\dots,x_{i+k}] = \frac{f[x_{i+1},\dots,x_{i+k}] - f[x_i,\dots,x_{i+k-1}]}{x_{i+k}-x_i}.
+y(x_i + h)
+  = y(x_i)
+  + h\,y^{(1)}(x_i)
+  + \frac{h^2}{2!}\,y^{(2)}(x_i)
+  + \frac{h^3}{3!}\,y^{(3)}(x_i)
+  + \cdots
+\]
+\[
+y(x_i - h)
+  = y(x_i)
+  - h\,y^{(1)}(x_i)
+  + \frac{h^2}{2!}\,y^{(2)}(x_i)
+  - \frac{h^3}{3!}\,y^{(3)}(x_i)
+  + \cdots
 \]
 
-On définit la \textbf{base de Newton} :
+En combinant ces expansions (addition, soustraction, etc.), on fait disparaître 
+certains termes et apparaître les dérivées recherchées.  
+C’est ce principe qui permet de construire tous les schémas en différences finies.
+
+\subsubsection{Formule générale des Différences Finies}
+
+Les approximations des dérivées d’ordre $k$ s’obtiennent en écrivant :
 \[
-N_0(x)=1,\qquad
-N_k(x)=\prod_{j=0}^{k-1}(x-x_j)\quad (k\ge 1).
+y^{(k)}(x_i)
+\approx
+\sum_{j=-m}^{m} \alpha_j\, y(x_i + jh),
+\]
+où les coefficients $\alpha_j$ sont déterminés en identifiant les termes du développement de Taylor.
+
+Cette formule couvre :
+- les différences avant (points $i, i+1, i+2,\dots$),  
+- les différences arrière (points $i, i-1, i-2,\dots$),  
+- les différences centrées (points $i-2,\dots,i+2$).
+
+\subsubsection{Exemples classiques}
+
+\paragraph{Dérivée première (schéma centré d’ordre 2)}
+\[
+y^{(1)}(x_i) \approx \frac{y_{i+1} - y_{i-1}}{2h}.
 \]
 
-Ainsi on obtient la \textbf{forme finale du polynôme d'interpolation de Newton} :
+\paragraph{Dérivée seconde (schéma centré d’ordre 2)}
 \[
-\boxed{
-P_n(x)= f[x_0] + \sum_{k=1}^{n} f[x_0,\dots,x_k]\; N_k(x)
-= \sum_{k=0}^{n} c_k\,N_k(x)
-}
-\]
-avec 
-\[
-c_0=f[x_0],\quad c_1=f[x_0,x_1],\quad \dots,\quad c_n=f[x_0,\dots,x_n].
+y^{(2)}(x_i) 
+\approx 
+\frac{y_{i+1} - 2y_i + y_{i-1}}{h^2}.
 \]
 
-\subsubsection{Écriture matricielle au niveau des n\oe{}uds.}
-En évaluant $P_n$ aux n\oe{}uds $x_i$, on obtient le système :
+\paragraph{Dérivée d’ordre 4 (schéma centré d’ordre 2)}
 \[
-\underbrace{\begin{pmatrix}
-N_0(x_0) & 0            & \cdots & 0 \\
-N_0(x_1) & N_1(x_1)     & \cdots & 0 \\
-\vdots   & \vdots       & \ddots & \vdots \\
-N_0(x_n) & N_1(x_n)     & \cdots & N_n(x_n)
-\end{pmatrix}}_{\displaystyle A}
-\underbrace{\begin{pmatrix} c_0 \\ c_1 \\ \vdots \\ c_n \end{pmatrix}}_{\displaystyle \mathbf{c}}
-=
-\underbrace{\begin{pmatrix} f(x_0) \\ f(x_1) \\ \vdots \\ f(x_n) \end{pmatrix}}_{\displaystyle \mathbf{f}}
-\quad\Longleftrightarrow\quad
-A\,\mathbf{c}=\mathbf{f}.
+y^{(4)}(x_i)
+\approx
+\frac{y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2}}{h^4}.
 \]
 
-\noindent
-Ici $A$ est \textbf{triangulaire inférieure} (dite matrice de Newton) car $N_k(x_i)=0$ pour $i<k$.  
-Elle s’inverse facilement (tous les $x_i$ distincts $\Rightarrow \det(A)\neq 0$).
-
-\subsubsection{Avantages et limites}
-
-\paragraph{Avantages :}
-\begin{itemize}
-  \item Méthode simple à mettre en œuvre numériquement ;
-  \item Bonne précision pour des maillages fins ($h$ petit) ;
-  \item Convient bien aux géométries régulières (segments, carrés, cubes).
-\end{itemize}
-
-\paragraph{Limites :}
-\begin{itemize}
-  \item Moins adaptée aux géométries complexes ;
-  \item La précision dépend fortement du pas $h$ ;
-  \item Les conditions aux limites doivent être imposées avec soin.
-\end{itemize}
+\subsubsection{Principe final}
+En remplaçant dans une équation différentielle les dérivées 
+$y^{(k)}(x)$ par leurs approximations discrètes, 
+on transforme l’équation continue en un système linéaire :
+\[
+A\,y = B
+\]
+où $y = (y_0,\dots,y_N)^T$ est le vecteur des valeurs recherchées.
+Ce système peut alors être résolu numériquement par des méthodes algébriques.
 
 \subsection{Solveurs numériques}
 
@@ -366,17 +444,17 @@ y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0.
 \]
 Cette relation relie la flèche $y_i$ en un point aux valeurs de ses voisins immédiats, et servira à construire la matrice du système linéaire. Cette relation s'applique à \textbf{tous les points extérieurs} excepté ceux proches des bords.
 
-Afin de résoudre le système, il est nécessaire de traduire les quatre conditions aux limites du problème continu sous forme discrète.\\\\\\\\\\\\\\\\
+Afin de résoudre le système, il est nécessaire de traduire les quatre conditions aux limites du problème continu sous forme discrète.\\\\\\\\
 
 \textbf{Lien entre les conditions aux limites et la formulation en DF}\\
 
 Ces conditions se traduisent, sur le maillage $\{x_i\}_{i=0}^N$ de pas $h = L/N$, par les relations suivantes :
 \[
 \begin{cases}
-y_0 = 0, & \text{(déplacement nul)} \\[6pt]
-\dfrac{y_1 - y_0}{h} = 0 \quad \Rightarrow \quad y_1 = y_0, & \text{(pente nulle)} \\[10pt]
-\dfrac{y_N - 2y_{N-1} + y_{N-2}}{h^2} = 0, & \text{(moment nul)} \\[12pt]
-EI\,\dfrac{y_N - 3y_{N-1} + 3y_{N-2} - y_{N-3}}{h^3} = -F. & \text{(effort tranchant appliqué)}
+y_0 = 0 & \text{(déplacement nul)} \\[6pt]
+\dfrac{y_1 - y_0}{h} = 0 \quad \Rightarrow \quad y_1 = y_0 & \text{(pente nulle)} \\[10pt]
+\dfrac{y_N - 2y_{N-1} + y_{N-2}}{h^2} = 0 & \text{(moment nul)} \\[12pt]
+EI\,\dfrac{y_N - 3y_{N-1} + 3y_{N-2} - y_{N-3}}{h^3} = -F & \text{(effort tranchant appliqué)}
 \end{cases}
 \]
 \\
@@ -384,7 +462,7 @@ EI\,\dfrac{y_N - 3y_{N-1} + 3y_{N-2} - y_{N-3}}{h^3} = -F. & \text{(effort tranc
 
 Ainsi, l’ensemble des équations discrètes issues du schéma de différences finies et des conditions aux limites peut s’écrire sous la forme matricielle suivante :
 \[
-A\,\mathbf{y} = \mathbf{b},
+A\,\mathbf{y} = \mathbf{b}
 \]
 où :
 \begin{itemize}
@@ -472,5 +550,6 @@ https://www.glissattitude.com/blog/ski-alpin-et-racing-11/souplesse-et-rigidite-
 https://theses.insa-lyon.fr/publication/1986ISAL0006/these.pdf\\\\\\
 http://dspace.univ-tiaret.dz/bitstream/123456789/2623/1/TH.M.GC.FR.2017.21.pdf \\\\\\
 https://www.glissattitude.com/blog/ski-alpin-et-racing-11/les-fixations-de-ski-2767 \\\\\\
+https://www.etudiantgeniecivil.com/theorie-des-poutres/ \\\\\\
 
 \end{document}
