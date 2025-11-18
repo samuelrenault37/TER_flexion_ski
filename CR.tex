@@ -374,12 +374,12 @@ Une \textbf{force ponctuelle $F$} est appliquée verticalement vers le bas à l�
 \noindent
 L’équation générale de la flexion pour une poutre de raideur $EI$ est :
 \[
-EI\,y^{(4)}(x) = q(x)
+EI\,y^{(4)}(x) = -q(x)
 \]
 où $q(x)$ désigne la charge répartie le long de la poutre.  
 Ici, la charge étant \textbf{ponctuelle en $x=L$}, on a :
 \[
-EI\,y^{(4)}(x) = 0 \quad \text{pour } 0 \le x < L.
+EI\,y^{(4)}(x) = 0 \quad \text{pour } 0 \le x < L
 \]
 
 \vspace{0.5em}
@@ -401,11 +401,11 @@ EI\,y'''(L) = -F, & \text{(effort tranchant égal à la force appliquée $F$)}
 Sur toute la longueur de la poutre, il n’y a pas de charge répartie, donc la courbure $y''(x)$ varie linéairement.  
 L’effort tranchant $T_y(x)$ et le moment fléchissant $M_z(x)$ s’obtiennent à partir des dérivées successives de $y(x)$ :
 \[
-T_y(x) = EI\,y^{(3)}(x), \qquad M_z(x) = EI\,y''(x).
+T_y(x) = EI\,y^{(3)}(x), \qquad M_z(x) = EI\,y''(x)
 \]
 On impose à l’extrémité libre $B$ l’équilibre :
 \[
-M_z(L) = 0, \qquad T_y(L) = -F.
+M_z(L) = 0, \qquad T_y(L) = -F
 \]
 Ces conditions reflètent le fait que l’extrémité ne supporte pas de moment appliqué, mais subit la force ponctuelle $F$.
 
@@ -432,15 +432,15 @@ On découpe alors notre domaine $[0,L]$ en $N$ intervalles avec $h = \dfrac{L}{N
 
 À l’aide du développement de Taylor autour du point $x_i$, on peut approximer la dérivée quatrième par le schéma centré d’ordre~2 suivant :
 \[
-y^{(4)}(x_i) \approx \frac{y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2}}{h^4}.
+y^{(4)}(x_i) \approx \frac{y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2}}{h^4}
 \]
 En remplaçant cette approximation dans l’équation différentielle de la flexion
 \[
-EI\,y^{(4)}(x) = 0,
+EI\,y^{(4)}(x) = 0
 \]
 on obtient, pour chaque point intérieur du domaine :
 \[
-y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0.
+y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0
 \]
 Cette relation relie la flèche $y_i$ en un point aux valeurs de ses voisins immédiats, et servira à construire la matrice du système linéaire. Cette relation s'applique à \textbf{tous les points extérieurs} excepté ceux proches des bords.
 
@@ -474,7 +474,7 @@ où :
 \paragraph{Structure de la matrice $A$.}
 Pour les points intérieurs ($i=2,\dots,N-2$), chaque équation est issue du schéma à cinq points :
 \[
-y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0.
+y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0
 \]
 La matrice $A$ est donc \textbf{pentadiagonale} (à cinq bandes diagonales non nulles) : chaque ligne intérieure contient les coefficients $[1,\,-4,\,6,\,-4,\,1]$ centrés sur la colonne correspondant à $y_i$.
 
@@ -539,7 +539,32 @@ Les résultats obtenus montrent que la flèche calculée numériquement reprodui
 \\\\
 Cette première approche valide notre schéma numérique sur un cas simple. Elle servira de base à l’étude de cas plus complexes. 
 
+\subsection{\textbf{Cas de la flexion 4 points classique}}
 
+\subsubsection{\textbf{Méthode Analytique}}
+
+Dans le cas de la flexion quatre points classique, la poutre est posée sur \textbf{deux appuis simples} disposés \textbf{symétriquement} par rapport à son milieu. \textbf{Deux forces} de même intensité sont appliquées entre les appuis, également de façon symétrique. L’ensemble du montage présente donc une \textbf{symétrie axiale autour du centre de la poutre}.
+\vspace{1em}
+En emmet les hypothèses suivantes : 
+\begin{itemize}
+\item Le poids propre de la poutre est négligé
+\item La poutre est droite avant chargement
+\item Le matériau est homogène et isotrope 
+\item La flexion se produit dans un seul plan qui coïncide avec avec un axe principal de section 
+\end{itemize}
+\vspace{1em}
+On connaît les relations suivantes : 
+
+\[
+EI.y''(x) = M_{fz}(x) \qquad \dv{M_{fz}(x)}{x} = T_y(x) \qquad \dv{T_{y}(x)}{x} =-q(x)
+\]
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.32\textwidth]{IMG_3372.png}
+    \caption{Conditions limites flexion 4 points classique}
+    \label{fig:flexion_ski}
+\end{figure}
 
 
 \section{\textbf{Références bibliographiques}}
