@@ -6,7 +6,7 @@ then
 fi
 if [ -e $1 ]
 then
-    gfortran $1 -o $2 -llapack -lblas && ./$2
+    gfortran constantes.f90 fonction_pract.f90 initialisation.f90 methode.f90 $1 -o $2 -llapack -lblas -Wall -Wextra -g -O2&& ./$2
 else
     echo "Bah $1 ça existe pas"
 fi
