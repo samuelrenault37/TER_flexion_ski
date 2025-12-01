@@ -13,6 +13,7 @@ module meth
         real(PR), intent(in) :: borne_a, h
         character(len=*), intent(in) :: file
         real(PR), dimension(N,N) :: Id
+        real(PR), dimension(N) :: echange
         real(PR) :: facteur
         integer :: i, j, k
 
@@ -23,7 +24,22 @@ module meth
         
         do i = 1,N
             if(ABS(A(i,i)) < epsilon) then
-                print *, "pas inversible avec cette méthode"
+                j = i+1
+                do while (j <= N .AND. ABS(A(j,i)) < epsilon)
+                    j = j + 1
+                end do
+                if (j <= N) then
+                    echange = A(j, :)
+                    A(j, :) = A(i, :)
+                    A(i, :) = echange
+
+                    echange = Id(j, :)
+                    Id(j, :) = Id(i, :)
+                    Id(i, :) = echange
+                else
+                    print *, "pas inversible avec cette méthode"
+                    stop
+                end if
             end if
 
             facteur = A(i,i)
@@ -92,7 +108,7 @@ module meth
         integer :: i, max_iter
 
         x = 0
-        max_iter = 1000
+        max_iter = 100000000
 
         call matvec_csr(N, A_val, A_col, A_row, x, Ap)
         r = b - Ap
