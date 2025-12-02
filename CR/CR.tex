@@ -15,9 +15,9 @@
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{subcaption}
-\usepackage{physics} % pour \dv et cie
-
+\usepackage{physics}
 \pagestyle{fancy}
+\setlength{\headheight}{33pt} % pour éviter le warning fancyhdr
 \fancyhf{}
 \fancyhead[L]{\includegraphics[height=1cm]{logo_em.jpg}}
 \fancyhead[R]{MM1 Groupe 1}
@@ -28,7 +28,6 @@
 \begin{titlepage}
     \centering
     \includegraphics[width=0.5\textwidth]{logo_em.jpg}\\[5cm]
-
     {\LARGE \textbf{
 Comment la répartition de la charge du skieur le long du ski
 influence-t-elle la courbure et la zone de flexion maximale ?
@@ -50,8 +49,6 @@ influence-t-elle la courbure et la zone de flexion maximale ?
 \end{titlepage}
 
 \vspace{1.5cm}
-
-
 
 \begin{figure}[h!]
     \centering
@@ -154,8 +151,6 @@ influence-t-elle la courbure et la zone de flexion maximale ?
     \item Lien avec la problématique générale du TER.
 \end{itemize}
 
-
-
 \section{\textbf{Formules importantes de Flexion}}
 
 \begin{itemize}
@@ -172,7 +167,8 @@ où :
   \item $L$ est la longueur de la poutre,
   \item $E$ est le module d’Young du matériau,
   \item $I$ est le moment quadratique de la section droite de la poutre.
-\\\\
+\end{itemize}
+
 \textbf{Demonstration :}
 \[
 \{ \tau \} =  \left\{\begin{matrix}
@@ -193,9 +189,6 @@ Donc :
 D'où : 
 \[\delta_{\max}=w(L)=\frac{FL^3}{3EI}\]
 
-
-\end{itemize}
-
     \item Relation entre le moment de flexion et l'effort tranchant
 
     \[
@@ -211,11 +204,9 @@ où :
   \item $T_y(x)$ est l’\textbf{effort tranchant} selon l’axe $y$.
 
 \end{itemize}
-\\
 
-Cette relation traduit l’\textbf{équilibre interne des efforts} dans une poutre fléchie
+Cette relation traduit l’\textbf{équilibre interne des efforts} dans une poutre fléchie.
 
-\\
 \begin{itemize}
 \item Relation entre le moment fléchissant et la charge répartie :
 
@@ -224,11 +215,9 @@ Cette relation traduit l’\textbf{équilibre interne des efforts} dans une pout
 \]
 où $q(x)$ est \textbf{la charge répartie}
 \end{itemize}
-\\
 
 \item Equation de la déformée pour une poutre encastrée :
 
-% Déformée d'une poutre encastrée (charge ponctuelle F à l'extrémité libre)
 \[
 y(x) \;=\; \frac{1}{E I(g,z)}
 \Bigl(
@@ -238,12 +227,10 @@ y(x) \;=\; \frac{1}{E I(g,z)}
 \Bigr)
 \]
 
-% Forme équivalente (classique) :
 \[
 y(x) \;=\; -\,\frac{F}{6\,E I(g,z)}\,x^{2}\bigl(3L - x\bigr)
 \]
 
-% Rappel des conditions aux limites (encastrement en x=0)
 \[
 y(0)=0, \qquad y'(0)=0
 \]
@@ -275,7 +262,6 @@ On choisit un nombre $N$ de points de discrétisation appelés \textit{nœuds} :
 x_0 = a,\quad x_1 = a + h,\quad x_2 = a + 2h,\quad \dots,\quad x_N = b,
 \]
 où $h = \dfrac{b - a}{N}$ est le pas du maillage.
-
 
 \subsubsection{Développement de Taylor}
 
@@ -444,7 +430,7 @@ y_{i-2} - 4y_{i-1} + 6y_i - 4y_{i+1} + y_{i+2} = 0
 \]
 Cette relation relie la flèche $y_i$ en un point aux valeurs de ses voisins immédiats, et servira à construire la matrice du système linéaire. Cette relation s'applique à \textbf{tous les points extérieurs} excepté ceux proches des bords.
 
-Afin de résoudre le système, il est nécessaire de traduire les quatre conditions aux limites du problème continu sous forme discrète.\\\\\\\\
+Afin de résoudre le système, il est nécessaire de traduire les quatre conditions aux limites du problème continu sous forme discrète.
 
 \textbf{Lien entre les conditions aux limites et la formulation en DF}\\
 
@@ -457,7 +443,7 @@ y_0 = 0 & \text{(déplacement nul)} \\[6pt]
 EI\,\dfrac{y_N - 3y_{N-1} + 3y_{N-2} - y_{N-3}}{h^3} = -F & \text{(effort tranchant appliqué)}
 \end{cases}
 \]
-\\
+
 \textbf{Forme matricielle du système linéaire}
 
 Ainsi, l’ensemble des équations discrètes issues du schéma de différences finies et des conditions aux limites peut s’écrire sous la forme matricielle suivante :
@@ -491,7 +477,6 @@ A =
 \end{pmatrix}
 \]
 
-
 Les deux premières lignes imposent les conditions d’encastrement
 ($y_0=0$, $y_1=y_0$),  
 les deux dernières traduisent les conditions à l’extrémité libre
@@ -506,24 +491,21 @@ Comme la poutre n’est soumise à aucune charge répartie, tous les termes du s
 \end{pmatrix}
 \]
 
-
 La méthode numérique décrite précédemment a été implémentée à l’aide du langage \textsc{Fortran}~90.  
-\\
-
 
 La résolution du système est réalisée par la \textbf{méthode du pivot de Gauss}, permettant d’inverser la matrice $A$ et d’obtenir le vecteur des déformations $\mathbf{y}$.  
 Le code présent sur le Github \textsc{TER\_flexion\_ski} nommé \textsc{resol\_encastrement.f90} fournit la flèche discrète du ski pour chaque nœud du maillage, en fonction du pas $h = L/N$ choisi.
-\\
-Pour chaque nombre d’intervalles $N$, la solution numérique $\mathbf{y}_{\text{num}}$ à ensuite été comparée à la solution analytique $\mathbf{y}_{\text{exact}}$, et ainsi a pu être calculée l’\textbf{erreur relative maximale} :
-\\\\
+
+Pour chaque nombre d’intervalles $N$, la solution numérique $\mathbf{y}_{\text{num}}$ à ensuite été comparée à la solution analytique $\mathbf{y}_{\text{exact}}$, et ainsi a pu être calculée l\textbf{'erreur relative maximale} :
+
 \[
 \varepsilon_{\text{rel}} = \frac{\max_i \big|y^{\text{num}}_i - y^{\text{exact}}(x_i)\big|}{\max_i \big|y^{\text{exact}}(x_i)\big|}.
 \]
-\\\\
+
 Cette erreur permet d’évaluer la convergence de la méthode lorsque le pas de discrétisation $h$ tend vers zéro.  
-\\\\
+
 Ainsi, voici pour différents $N$ fixé, les valeurs des erreurs relatives obtenues : 
-\\
+
 \begin{itemize}
     \item[\textbullet]$N_1 = 10$ : $\varepsilon_{\text{rel}} = 0.415$
     \item[\textbullet]$N_2 = 20$ : $\varepsilon_{\text{rel}} = 0.216$
@@ -536,45 +518,271 @@ Ainsi, voici pour différents $N$ fixé, les valeurs des erreurs relatives obten
 
 L’étude numérique réalisée a permis de vérifier le bon comportement de la méthode des différences finies pour la résolution de l’équation de flexion d’une poutre encastrée soumise à une charge ponctuelle.  
 Les résultats obtenus montrent que la flèche calculée numériquement reproduit fidèlement la forme attendue de la déformée, et que l’erreur relative diminue fortement lorsque le nombre de points de discrétisation $N$ augmente.  
-\\\\
+
 Cette première approche valide notre schéma numérique sur un cas simple. Elle servira de base à l’étude de cas plus complexes. 
 
-\subsection{\textbf{Cas de la flexion 4 points classique}}
+\subsection{\textbf{Cas de la flexion 3 points}}
 
-\subsubsection{\textbf{Méthode Analytique}}
+\subsubsection{\textbf{Méthode analytique}}
 
-Dans le cas de la flexion quatre points classique, la poutre est posée sur \textbf{deux appuis simples} disposés \textbf{symétriquement} par rapport à son milieu. \textbf{Deux forces} de même intensité sont appliquées entre les appuis, également de façon symétrique. L’ensemble du montage présente donc une \textbf{symétrie axiale autour du centre de la poutre}.
+Dans le cadre de notre TER, nous commençons par étudier le cas le plus simple et le plus classique de la flexion d’une poutre : la \textbf{flexion trois points}. 
+La poutre (qui modélise le ski) est posée sur deux \textbf{appuis simples} disposés symétriquement par rapport à son milieu. 
+Une \textbf{force ponctuelle} $F$ est appliquée au centre, représentant la projection du poids du skieur sur le ski. 
+L’ensemble du système est donc \textbf{symétrique} par rapport à l’axe médian.
+
 \vspace{1em}
-En emmet les hypothèses suivantes : 
+
+Afin de simplifier l’analyse, les hypothèses suivantes sont retenues :
 \begin{itemize}
-\item Le poids propre de la poutre est négligé
-\item La poutre est droite avant chargement
-\item Le matériau est homogène et isotrope 
-\item La flexion se produit dans un seul plan qui coïncide avec avec un axe principal de section 
+    \item le poids propre du ski est négligé ;
+    \item le ski est initialement rectiligne avant chargement ;
+    \item le matériau est homogène et isotrope ;
+    \item la flexion se produit dans un seul plan, conformément aux hypothèses d’Euler–Bernoulli.
+\end{itemize}
+
+\vspace{1em}
+
+Les \textbf{conditions aux limites} correspondantes à une poutre simplement appuyée sont :
+\[
+\begin{cases}
+y(0) = 0, \\[4pt]
+y''(0) = 0, \\[4pt]
+y(L) = 0, \\[4pt]
+y''(L) = 0. \\[4pt]
+\end{cases}
+\]
+
+Elles traduisent le fait qu’aux deux appuis : 
+\begin{itemize}
+    \item la déflexion est nulle ($y=0$) ;
+    \item le moment fléchissant est nul ($M=EI\,y''=0$), car un appui simple ne s’oppose pas à la rotation.
+\end{itemize}
+
+Pour déterminer la déformée de la poutre, nous utilisons la relation fondamentale de la
+flexion d’Euler–Bernoulli :
+\[
+EI\,y''(x) = M(x),
+\]
+où $M(x)$ désigne le moment fléchissant interne. 
+La résolution du problème consiste donc à exprimer $M(x)$ en fonction de la position $x$,
+puis à intégrer deux fois pour obtenir la déformée $y(x)$.
+
+\vspace{1em}
+Dans notre configuration, la charge ponctuelle est appliquée au milieu de la poutre en 
+\(
+x_0 = L/2.
+\)
+Les appuis étant symétriques, les réactions verticales aux appuis valent :
+\[
+R_1 = R_2 = \frac{F}{2}.
+\]
+\vspace{1em}
+La poutre est naturellement séparée en deux zones :
+
+\begin{itemize}
+    \item \textbf{Zone 1 : $0 \le x \le L/2$}.  
+    Seule la réaction gauche agit sur cette portion :
+    \[
+    M(x) = R_1\, x = \frac{F}{2}\, x.
+    \]
+
+    \item \textbf{Zone 2 : $L/2 \le x \le L$}.  
+    On rencontre la réaction gauche et la charge ponctuelle $F$ appliquée en $x_0$ :
+    \[
+    M(x) = R_1 x - F(x - x_0)
+    =\frac{F}{2}(L - x).
+    \]
 \end{itemize}
 \vspace{1em}
-On connaît les relations suivantes : 
+
+En reportant ces expressions dans la loi d’Euler–Bernoulli, on obtient l’équation de la déformée :
 
 \[
-EI.y''(x) = M_{fz}(x) \qquad \dv{M_{fz}(x)}{x} = T_y(x) \qquad \dv{T_{y}(x)}{x} =-q(x)
+EI\,y''(x) = \frac{F}{2}x, \qquad 0 \le x \le \frac{L}{2},
 \]
+\[
+EI\,y''(x) = \frac{F}{2}(L-x), \qquad \frac{L}{2} \le x \le L.
+\]
+
+\vspace{1em}
+
+Enfin, la charge ponctuelle en $x_0$ impose une condition interne exprimant le saut de la dérivée
+troisième :
+\[
+EI\big[y^{(3)}(x_0^+) - y^{(3)}(x_0^-)\big] = -F,
+\]
+tandis que $y$, $y'$ et $y''$ restent continus en $x_0$.
+
+\paragraph{Intégration dans la zone $0\le x\le L/2$.}
+\[
+EI\,y''_1(x)=\frac{F}{2}x
+\]
+\[
+y'_1(x)=\frac{F}{4EI}x^2 + C_1,
+\qquad
+y_1(x)=\frac{F}{12EI}x^3 + C_1 x + C_2.
+\]
+La condition d'appui $y(0)=0$ impose immédiatement $C_2=0$.
+
+\paragraph{Intégration dans la zone $L/2\le x\le L$.}
+\[
+EI\,y''_2(x)=\frac{F}{2}(L-x)
+\]
+\[
+y'_2(x)=\frac{F}{2EI}\left(Lx - \frac{x^2}{2}\right)+C_3,
+\qquad
+y_2(x)=\frac{F}{2EI}\left(\frac{Lx^2}{2}-\frac{x^3}{6}\right)+C_3x+C_4.
+\]
+La condition d'appui $y(L)=0$ donne $C_4=0$.
+
+\paragraph{Conditions de continuité en $x=L/2$.}
+Comme il n'y a ni charnière ni encastrement au milieu, la déformée est continue ainsi que sa pente :
+\[
+y_1\!\left(\frac{L}{2}\right)=y_2\!\left(\frac{L}{2}\right),\qquad
+y'_1\!\left(\frac{L}{2}\right)=y'_2\!\left(\frac{L}{2}\right).
+\]
+Ces deux équations permettent de déterminer les constantes $C_1$ et $C_3$ :
+\[
+C_1 = -\frac{F L^2}{48\,EI},
+\qquad
+C_3 = +\frac{F L^2}{48\,EI}.
+\]
+
+\paragraph{Solution finale.}
+La déformée analytique s’écrit donc :
+\[
+y(x)=
+\begin{cases}
+\displaystyle
+\frac{F}{12EI}x^{3}
+-\frac{F L^{2}}{48EI}\,x,
+& 0\le x\le \dfrac{L}{2},
+\\[12pt]
+\displaystyle
+\frac{F}{2EI}\left(\frac{Lx^{2}}{2}-\frac{x^{3}}{6}\right)
++\frac{F L^{2}}{48EI}\,x,
+& \dfrac{L}{2}\le x\le L.
+\end{cases}
+\]
+
+\subsubsection{\textbf{Méthode numérique}}
+
+\paragraph{Discrétisation}
+
+On discrétise l’intervalle $[0,L]$ en $N$ sous-intervalles de longueur $h=L/N$,
+avec des nœuds $x_i = ih$ pour $i=0,\dots,N$.
+La dérivée seconde est approchée par le schéma centré :
+\[
+y''(x_i) \approx \frac{y_{i+1}-2y_i+y_{i-1}}{h^2}.
+\]
+
+En substituant dans l’équation $EI\,y''(x)=M(x)$, on obtient pour
+tout nœud intérieur $i=1,\dots,N-1$ :
+\[
+\frac{y_{i+1}-2y_i+y_{i-1}}{h^2}
+= \frac{M(x_i)}{EI}.
+\]
+
+\paragraph{Conditions aux limites}
+
+Les appuis simples imposent :
+\[
+y(0)=0, \qquad y(L)=0,
+\]
+ce qui se traduit numériquement par :
+\[
+y_0 = 0, \qquad y_N = 0.
+\]
+
+Ces conditions remplacent directement les lignes $i=0$ et $i=N$ du système.
+
+\paragraph{Système linéaire obtenu}
+
+Pour chaque nœud intérieur $i=1,\dots,N-1$, l’équation discrète devient :
+\[
+- y_{i-1} + 2y_i - y_{i+1}
+= -\,\frac{h^2}{EI}\,M(x_i).
+\]
+
+En assemblant l’ensemble des équations, on obtient un système linéaire :
+\[
+A\,\mathbf{y} = \mathbf{b},
+\]
+où la matrice $A$ est tridiagonale :
+\[
+A=
+\begin{pmatrix}
+1 & 0 & 0 & \cdots & 0\\
+-1 & 2 & -1 & \cdots & 0\\
+0 & \ddots & \ddots & \ddots & 0\\
+0 & \cdots & -1 & 2 & -1\\
+0 & \cdots & 0 & 0 & 1
+\end{pmatrix},
+\]
+et le second membre est donné par :
+\[
+b_0=0,\qquad b_N=0,
+\]
+\[
+b_i = -\frac{h^2}{EI}\,M(x_i),\qquad i=1,\dots,N-1.
+\]
+
+La méthode numérique décrite précédemment a été implémentée à l’aide du langage \textsc{Fortran}~90.  
+
+La résolution du système est réalisée par la \textbf{méthode du pivot de Gauss}, permettant d’inverser la matrice $A$ et d’obtenir le vecteur des déformations $\mathbf{y}$.  
+Le code présent sur le Github \textsc{TER\_flexion\_ski} nommé \textsc{resol\_flexion\_3pts.f90} fournit la flèche discrète du ski pour chaque nœud du maillage, en fonction du pas $h = L/N$ choisi.
+
+Pour chaque nombre d’intervalles $N$, la solution numérique $\mathbf{y}_{\text{num}}$ à ensuite été comparée à la solution analytique $\mathbf{y}_{\text{exact}}$, et ainsi a pu être calculée l\textbf{'erreur relative maximale} :
+
+\[
+\varepsilon_{\text{rel}} = \frac{\max_i \big|y^{\text{num}}_i - y^{\text{exact}}(x_i)\big|}{\max_i \big|y^{\text{exact}}(x_i)\big|}.
+\]
+
+Cette erreur permet d’évaluer la convergence de la méthode lorsque le pas de discrétisation $h$ tend vers zéro.  
+
+Ainsi, voici pour différents $N$ fixé, les valeurs des erreurs relatives obtenues : 
+
+\begin{itemize}
+    \item[\textbullet]$N_1 = 10$ : $\varepsilon_{\text{rel}} = 0.20$
+    \item[\textbullet]$N_2 = 20$ : $\varepsilon_{\text{rel}} = 0.05$
+    \item[\textbullet]$N_3 = 40$ : $\varepsilon_{\text{rel}} = 0.0125$
+    \item[\textbullet]$N_4 = 80$ : $\varepsilon_{\text{rel}} = 0.003125$
+    \item[\textbullet]$N_5 = 160$ : $\varepsilon_{\text{rel}} = 0.000078125$
+\end{itemize}
+\vspace{1em}
+On constate que l'erreur relative obtenue pour la poutre simplement appuyée est nettement inférieure à celle du cas encastré. Cette amélioration s'explique notamment par la symétrie du chargement et par une solution plus régulière, ce qui réduit l'erreur de discrétisation.
+
+\section{\textbf{Approche expérimentale}}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.32\textwidth]{IMG_3372.png}
-    \caption{Conditions limites flexion 4 points classique}
+    \includegraphics[width=0.32\textwidth]{IMG_3375.png}
+    \includegraphics[width=0.32\textwidth]{IMG_3374.png}
+
+    \caption{Variations de flexion avec et sans charge pour la flexion 4 points : (a) Avant chargement, (b) Après chargement}
     \label{fig:flexion_ski}
 \end{figure}
 
+\subsection{\textbf{Flexion 4 points centrées}}
+
+Dans cette nouvelle étude, chaque force ponctuelle représente la force de poids répartie sur les deux éléments de la fixation en contact avec le ski.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.32\textwidth]{IMG_3820.jpg}
+
+    \caption{Début recherches calcul analytique de la flexion 4 points centrées}
+    \label{fig:flexion_ski}
+\end{figure}
 
 \section{\textbf{Références bibliographiques}}
+
 \noindent
-\\
-https://soothski.com/proprietes-skis-expliquees/2021/ski-longueur-sidecut-rayon-rockers-flexion-torsion-complique/?lang=fr \\\\\\
-https://www.glissattitude.com/blog/ski-alpin-et-racing-11/souplesse-et-rigidite-des-skis-4737 \\\\\\
-https://theses.insa-lyon.fr/publication/1986ISAL0006/these.pdf\\\\\\
-http://dspace.univ-tiaret.dz/bitstream/123456789/2623/1/TH.M.GC.FR.2017.21.pdf \\\\\\
-https://www.glissattitude.com/blog/ski-alpin-et-racing-11/les-fixations-de-ski-2767 \\\\\\
-https://www.etudiantgeniecivil.com/theorie-des-poutres/ \\\\\\
+https://soothski.com/proprietes-skis-expliquees/2021/ski-longueur-sidecut-rayon-rockers-flexion-torsion-complique/?lang=fr\\
+https://www.glissattitude.com/blog/ski-alpin-et-racing-11/souplesse-et-rigidite-des-skis-4737\\
+https://theses.insa-lyon.fr/publication/1986ISAL0006/these.pdf\\
+http://dspace.univ-tiaret.dz/bitstream/123456789/2623/1/TH.M.GC.FR.2017.21.pdf\\
+https://www.glissattitude.com/blog/ski-alpin-et-racing-11/les-fixations-de-ski-2767\\
+https://www.etudiantgeniecivil.com/theorie-des-poutres/\\
 
 \end{document}
