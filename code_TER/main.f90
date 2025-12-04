@@ -11,7 +11,7 @@ program main
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
-    N = 100
+    N = 500
 
     borne_a = 0
     borne_b = 1
@@ -32,7 +32,7 @@ program main
     
 
 
-    call meth_piv(A, b, borne_a, h, "res_solv.dat", N)
+    call meth_lapack(A, b, borne_a, h, "res_solv.dat", N)
     !call meth_grad_conj(A_val, A_col, A_row, b, borne_a, h, "res_solv.dat", N, NN)
 
     deallocate(b)

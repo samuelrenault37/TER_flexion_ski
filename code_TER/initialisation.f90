@@ -13,7 +13,7 @@ contains
         real(PR) :: F, E, I
 
         E = 1
-        F = -1
+        F = 1
         I = 1
 
         A = 0
