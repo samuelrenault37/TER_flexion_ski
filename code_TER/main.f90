@@ -32,8 +32,8 @@ program main
     
 
 
-    call meth_lapack(A, b, borne_a, h, "res_solv.dat", N)
-    !call meth_grad_conj(A_val, A_col, A_row, b, borne_a, h, "res_solv.dat", N, NN)
+    !call meth_lapack(A, b, borne_a, h, "res_solv.dat", N)
+    call meth_grad_conj(A_val, A_col, A_row, b, borne_a, h, "res_solv.dat", N, NN)
 
     deallocate(b)
     deallocate(A)

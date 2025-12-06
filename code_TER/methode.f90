@@ -94,7 +94,6 @@ module meth
     end subroutine meth_lapack
 
 
-    !cette methode ne marche enfait pas en l'état (je sais pas l'expliquer), je la réparerai quand on aura eu un vrai cours dessus
     subroutine meth_grad_conj(A_val, A_col, A_row, b, borne_a, h, file, N, NN)
         integer, intent(in) :: N, NN
         real(PR), intent(in) :: borne_a, h
@@ -110,13 +109,13 @@ module meth
         x = 0
         max_iter = 100000000
 
-        call matvec_csr(N, A_val, A_col, A_row, x, Ap)
+        call matvec_csr(N, NN, A_val, A_col, A_row, x, Ap)
         r = b - Ap
         p = r
         rho_cur = dot_product(r, r)
 
         do i = 1, max_iter
-            call matvec_csr(N, A_val, A_col, A_row, p, Ap)
+            call matvec_csr(N, NN, A_val, A_col, A_row, p, Ap)
             alpha = rho_cur / dot_product(p, Ap)
             x = x + alpha * p
             r = r - alpha * Ap
