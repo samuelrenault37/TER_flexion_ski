@@ -14,7 +14,7 @@ constantes.o : constantes.f90
 fonction_pract.o : fonction_pract.f90 constantes.o
 	$(F90) $(FFLAGS) -c fonction_pract.f90
 
-initialisation.o : initialisation.f90 constantes.o
+initialisation.o : initialisation.f90 constantes.o fonction_pract.o
 	$(F90) $(FFLAGS) -c initialisation.f90 
 
 methode.o : methode.f90 constantes.o fonction_pract.o

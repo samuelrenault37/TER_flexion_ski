@@ -54,4 +54,13 @@ module fonct
         
     end subroutine recup_NN
 
+    subroutine aff_matrice(A, N)
+        integer, intent(in) :: N
+        real(PR), dimension(N,N), intent(in) :: A
+        integer :: i
+        do i = 1,N
+            print *, A(i,:)
+        end do
+    end subroutine aff_matrice
+
 end module fonct

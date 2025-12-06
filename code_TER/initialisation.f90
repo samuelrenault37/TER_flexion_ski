@@ -1,54 +1,54 @@
 module init
     use const
+    use fonct
     implicit none
     
 contains
 
-  subroutine init_A_b(A, b, h, N)
+  subroutine init_A_b(A, b, h, L, N)
         integer, intent(in) :: N
-        real(PR), intent(in) :: h
+        real(PR), intent(in) :: h, L
         real(PR), dimension(N,N), intent(out) :: A
         real(PR), dimension(N), intent(out) :: b
         integer :: k
-        real(PR) :: F, E, I
+        real(PR) :: F, E, I, Mx, x
 
-        E = 1
-        F = 1
-        I = 1
+        E = 10d9 ! en Pa
+        F = 784.8_PR ! en N
+        I = 1.44d-8 ! en m**4
 
         A = 0
 
-        ! A
+        ! Condition pour la première ligne 
         A(1,1) = 1
 
-        A(2,1) = -1
-        A(2,2) =  1
+        ! Condition pour la dernière ligne
+        A(N, N) = 1
 
-        A(N-1, N-2) =  1
-        A(N-1, N-1) = -2
-        A(N-1, N)   =  1
 
-        A(N, N-3) = -1
-        A(N, N-2) =  3
-        A(N, N-1) = -3
-        A(N, N)   =  1
+        ! A
+        do k = 2, N-1
+    
+            x = (k-1)*h
 
-        do k=3, N-2
-            A(k,k-2) =  1
-            A(k,k-1) = -4
-            A(k,k)   =  6
-            A(k,k+1) = -4
-            A(k,k+2) =  1
+            A(k, k-1) = 1
+            A(k, k  ) = -2
+            A(k, k+1) = 1
+
+            ! Moment M(x) par morceaux
+            
+            if (x <= L/2._PR) then
+                Mx = 0.5_PR*F*x
+            else
+                Mx = 0.5_PR*F*(L-x)
+            end if
+
+            b(k) = (h**2*Mx/(E*I))
+            
         end do
 
-
-        !CL et b
-        b = 0*h**4
-        b(1) = 0 !u(a)
-        b(2) = 0*h !u'(a)
-        b(N-1) = 0*h**2 !u''(b)
-        b(N) = -F*h**3/(E*I) !u'''(b)
-
+        b(1) = 0
+        b(N) = 0
     end subroutine init_A_b
 
     ! A avec une seule zone non nul par ligne

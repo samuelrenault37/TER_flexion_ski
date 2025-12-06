@@ -11,16 +11,16 @@ program main
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
-    N = 500
+    N = 100
 
     borne_a = 0
-    borne_b = 1
+    borne_b = 1.6_PR
     h = (borne_b-borne_a)/(N-1)
 
     allocate(b(N))
     allocate(A(N,N))
 
-    call init_A_b(A, b, h, N)
+    call init_A_b(A, b, h, borne_b, N)
 
     call recup_NN(A, N, NN)
 
