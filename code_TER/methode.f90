@@ -6,12 +6,11 @@ module meth
     contains
 
     ! attention A est modifié en sortie
-    subroutine meth_piv(A, b, borne_a, h, file, N)
+    subroutine meth_piv(A, b, N, x)
         integer, intent(in) :: N
         real(PR), dimension(N,N), intent(inout) :: A
         real(PR), dimension(N), intent(in) ::  b
-        real(PR), intent(in) :: borne_a, h
-        character(len=*), intent(in) :: file
+        real(PR), dimension(N), intent(out) :: x
         real(PR), dimension(N,N) :: Id
         real(PR), dimension(N) :: echange
         real(PR) :: facteur
@@ -58,17 +57,15 @@ module meth
                 end if
             end do
         end do
-
-    call write_in_file("../doc/"//file, MATMUL(Id, b), N, h, borne_a)
-        
+    
+        x = MATMUL(Id, b)
     end subroutine meth_piv
 
-    subroutine meth_lapack(A, b, borne_a, h, file, N)
+    subroutine meth_lapack(A, b, N, x)
         integer, intent(in) :: N
-        real(PR), intent(in) :: borne_a, h
         real(PR), dimension(N,N), intent(in) :: A
         real(PR), dimension(N), intent(in) :: b
-        character(len=*), intent(in) :: file
+        real(PR), dimension(N), intent(out) :: x
         real(PR), dimension(3*N) :: work
         integer :: info, lda, lwork, ipiv(N)
 
@@ -89,20 +86,19 @@ module meth
             stop
         end if
 
-        call write_in_file("../doc/"//file, MATMUL(A, b), N, h, borne_a)
+        x = MATMUL(A, b)
 
     end subroutine meth_lapack
 
 
-    subroutine meth_grad_conj(A_val, A_col, A_row, b, borne_a, h, file, N, NN)
+    subroutine meth_grad_conj(A_val, A_col, A_row, b, N, NN, x)
         integer, intent(in) :: N, NN
-        real(PR), intent(in) :: borne_a, h
         real(PR), dimension(NN), intent(in) :: A_val !toutes les valeurs non nuls de la matrice en ligne
         integer, dimension(NN), intent(in) :: A_col !contient la colonnes de chacune de ses valeurs
         integer, dimension(N+1), intent(in) :: A_row !pointeurs de début de chaque ligne + 1
         real(PR), dimension(N), intent(in) :: b
-        character(len=*), intent(in) :: file
-        real(PR), dimension(N) :: x, r, p, Ap
+        real(PR), dimension(N), intent(out) :: x
+        real(PR), dimension(N) :: r, p, Ap
         real(PR) :: alpha, beta, rho_cur, rho_new
         integer :: i, max_iter
 
@@ -127,10 +123,7 @@ module meth
             p = r + beta * p
             rho_cur = rho_new
         end do
-
-        call write_in_file("../doc/"//file, x, N, h, borne_a)
     
-        
     end subroutine meth_grad_conj
 
 end module meth
