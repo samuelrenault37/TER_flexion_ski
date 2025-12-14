@@ -34,7 +34,7 @@ module fonct
         open(unit = 1, file = file, action = "write")
         write (1, '(A)') "#abscisse               ordonnée"
         do i = 1,N
-        write (1, *) a + (i-1)*(h), x(i)
+            write (1, *) a + (i-1)*(h), x(i)
         end do
         close(1)
     end subroutine write_in_file
