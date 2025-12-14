@@ -3,11 +3,12 @@ program main
     use init
     use meth
     use fonct
+    use err
     implicit none
 
     integer :: N, NN
     real(PR) :: borne_a, borne_b, h
-    real(PR), dimension(:), allocatable :: b, A_val
+    real(PR), dimension(:), allocatable :: b, A_val, x
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
@@ -19,6 +20,7 @@ program main
 
     allocate(b(N))
     allocate(A(N,N))
+    allocate(x(N))
 
     call init_A_b(A, b, h, borne_b, N)
 
@@ -29,16 +31,24 @@ program main
     allocate(A_row(N+1))
 
     call convert_A_CSR(A, A_val, A_col, A_row, N, NN)
+
+    call meth_piv(A, b, N, x)
+    !call meth_lapack(A, b, N, x)
+    !call meth_grad_conj(A_val, A_col, A_row, b, N, NN, x)
     
+    call write_in_file("../doc/res_solv.dat", x, N, h, borne_a)
 
-
-    !call meth_lapack(A, b, borne_a, h, "res_solv.dat", N)
-    call meth_grad_conj(A_val, A_col, A_row, b, borne_a, h, "res_solv.dat", N, NN)
+    ! correspondance des methodes avec des numéros pour utilisé correctement print_err
+    ! meth_piv -> 1
+    ! meth_lapack -> 2
+    ! meth_grad_conj -> 3
+    call print_err(2, borne_a, borne_b, "../doc/erreur.dat") 
 
     deallocate(b)
     deallocate(A)
+    deallocate(x)
     deallocate(A_val)
     deallocate(A_col)
     deallocate(A_row)
-    
+
 end program main
