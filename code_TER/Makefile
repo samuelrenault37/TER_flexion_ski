@@ -6,7 +6,7 @@ EXE = exec
 all : $(EXE)
 
 $(EXE) : main.o constantes.o fonction_pract.o initialisation.o methode.o
-	$(F90) -o $(EXE) main.o constantes.o fonction_pract.o initialisation.o methode.o $(LIBS)
+	$(F90) -o $(EXE) main.o constantes.o fonction_pract.o initialisation.o methode.o erreur.o $(LIBS)
 
 constantes.o : constantes.f90
 	$(F90) $(FFLAGS) -c constantes.f90
@@ -20,7 +20,10 @@ initialisation.o : initialisation.f90 constantes.o fonction_pract.o
 methode.o : methode.f90 constantes.o fonction_pract.o
 	$(F90) $(FFLAGS) -c methode.f90
 
-main.o : main.f90 constantes.o fonction_pract.o initialisation.o methode.o
+erreur.o : erreur.f90 constantes.o fonction_pract.o methode.o initialisation.o
+	$(F90) $(FFLAGS) -c erreur.f90
+
+main.o : main.f90 constantes.o fonction_pract.o initialisation.o methode.o erreur.o
 	$(F90) $(FFLAGS) -c main.f90
 
 clean : 
