@@ -6,13 +6,14 @@ program main
     use err
     implicit none
 
-    integer :: N, NN
+    integer :: N, NN, N_sol
     real(PR) :: borne_a, borne_b, h
     real(PR), dimension(:), allocatable :: b, A_val, x
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
     N = 100
+    N_sol = 1000
 
     borne_a = 0
     borne_b = 1.6_PR
@@ -42,7 +43,9 @@ program main
     ! meth_piv -> 1
     ! meth_lapack -> 2
     ! meth_grad_conj -> 3
-    call print_err(2, borne_a, borne_b, "../doc/erreur.dat") 
+    call print_err(2, borne_a, borne_b, "../doc/erreur.dat")
+
+    call print_sol(borne_a, borne_b, N_sol)
 
     deallocate(b)
     deallocate(A)

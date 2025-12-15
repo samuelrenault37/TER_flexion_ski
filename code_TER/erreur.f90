@@ -22,7 +22,6 @@ module err
             y = - (F*(L-x)*(3._PR*L**2-4._PR*(L-x)*(L-x))/(48._PR*E*I))
         end if
     
-        
     end function f_sol
 
     subroutine print_err(meth, borne_a, borne_b, file)
@@ -92,5 +91,22 @@ module err
         close(1)
 
     end subroutine print_err
+
+    subroutine print_sol(borne_a, borne_b, N_sol)
+        integer, intent(in) :: N_sol
+        real(PR), intent(in) :: borne_a, borne_b
+        real(PR), dimension(N_sol) :: x_sol
+        real(PR) :: h
+        integer :: i
+
+        h = (borne_b-borne_a)/(N_sol-1)
+
+        do i = 1, N_sol
+            x_sol(i) = f_sol(borne_b-borne_a, borne_a + h*(i-1))
+        end do
+    
+        call write_in_file("../doc/sol.dat", x_sol, N_sol, h, borne_a)
+        
+    end subroutine print_sol
 
 end module err
