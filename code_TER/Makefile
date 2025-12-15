@@ -1,5 +1,5 @@
 F90 = gfortran
-FFLAGS = -Wall -Wextra -g -fcheck=all -ffpe-trap=invalid,zero,overflow
+FFLAGS = -O0 -Wall -Wextra -g -fcheck=all -ffpe-trap=invalid,zero,overflow 
 LIBS = -llapack -lblas
 EXE = exec
 
