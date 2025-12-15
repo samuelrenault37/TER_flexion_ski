@@ -13,7 +13,7 @@ program main
     integer, dimension(:), allocatable :: A_col, A_row
 
     N = 100
-    N_sol = 1000
+    N_sol = 1000 !pas de discretisation pour tracer la solution analytique (pas de raison de la modifier)
 
     borne_a = 0
     borne_b = 1.6_PR
@@ -43,8 +43,9 @@ program main
     ! meth_piv -> 1
     ! meth_lapack -> 2
     ! meth_grad_conj -> 3
-    call print_err(2, borne_a, borne_b, "../doc/erreur.dat")
-
+    ! call print_err(2, borne_a, borne_b, "../doc/erreur.dat")  <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
+    ! et un seul appel est suffisant pour le moment
+     
     call print_sol(borne_a, borne_b, N_sol)
 
     deallocate(b)
