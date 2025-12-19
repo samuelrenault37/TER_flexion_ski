@@ -1,0 +1,197 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\geometry{margin=2cm}
+
+\title{Modélisation d'une charge répartie pour un skieur \\  
+via des fonctions de pression plantaire}
+\author{}  % Tu peux mettre ton nom
+\date{}    % Tu peux ajouter une date si tu veux
+
+\begin{document}
+
+\maketitle
+
+\section*{Résumé}
+L'objectif de ce document est de présenter les principes, choix et justifications d’un modèle de charge répartie exercée par un skieur sur un ski. Plusieurs formes possibles sont discutées, et l’utilisation d’une \textbf{somme de gaussiennes} est retenue comme le meilleur compromis entre réalisme, simplicité, robustesse analytique et numérique.
+
+Cette approche est très utilisée en biomécanique, en analyse de pressions plantaires,
+et s'adapte parfaitement au cas du ski, où la force du skieur est transmise au ski
+via deux zones principales : \textbf{le talon et l'avant-pied}.
+
+\section{Choix de la modélisation}
+
+\subsection{Introduction}
+Lorsqu’un skieur exerce son poids sur un ski via des chaussures rigides, la pression transmise n’est pas uniforme — elle se répartit via des zones d’appui (talon, avant-pied, éventuellement languette, etc.). Pour modéliser cette pression de façon mathématique et l’intégrer dans une étude de flexion/RDM, il faut choisir une forme fonctionnelle adaptée. Nous passons en revue plusieurs options, puis exposons notre choix et ses justifications.
+
+\subsection{Options possibles pour modéliser la pression plantaire}
+
+Voici quelques-unes des formes les plus couramment envisagées :
+
+\begin{itemize}
+  \item \textbf{Somme de gaussiennes} (notre choix) — modélisation par lobes (talon, avant-pied, …).  
+  \item \textbf{Splines / B-splines / fonctions polynomiales par morceaux} — surface définie par interpolation.  
+  \item \textbf{Modèles de contact mécanique (loi de Hertz, calottes élastiques, etc.)} — théorie du contact entre semelle et sol.  
+  \item \textbf{Modèle “plateau + décroissance”} : zone centrale à pression quasi-constante + décroissance exponentielle ou linéaire aux bords.  
+  \item \textbf{Données empiriques / semelles instrumentées} — carte de pression réelle mesurée, interpolée numériquement.  
+\end{itemize}
+
+\subsubsection*{Analyse des avantages / inconvénients}
+
+\begin{description}
+  \item[Splines / interpolation] \hfill \\
+    + Très flexible, capable de reproduire finement une carte expérimentale. \\
+    – Complexité élevée, peu de lien direct entre paramètres et signification physique. \\
+    – Intégration analytique difficile, interpolation numérique souvent nécessaire, ce qui rend les calculs RDM moins transparents.
+
+  \item[Modèles de contact (loi de Hertz)] \hfill \\
+    + Théorie physique rigoureuse (contact élastique), bon réalisme pour semelles plates / surfaces rigides. \\
+    – Paramètres difficiles à déterminer (géométrie du contact, rigidité, conditions d’appui). \\
+    – Intégration 1D ou projection sur ski non triviale, et modélisation complexe dans le cadre de notre TER.
+
+  \item[“Plateau + décroissance”] \hfill \\
+    + Peut représenter des appuis larges et relativement uniformes (talon, semelle). \\
+    – Discontinuités (au raccord plateau/décroissance), fonctions non dérivables ou mal adaptées à la RDM. \\
+    – Moins de contrôle sur la forme intégrale et les moments.
+
+  \item[Données empiriques] \hfill \\
+    + Réalité la plus fidèle possible. \\
+    – Nécessite un matériel coûteux (semelle capteur), interpolation complexe, données bruitées, difficile à généraliser. \\
+    – Moins adaptée à une approche théorique ou analytique généralisable.
+
+\end{description}
+
+\medskip
+
+Ainsi, aucun de ces modèles n’est parfait :  
+certains sont très réalistes mais trop complexes à modéliser tandis que d’autres sont simples mais trop approximatifs.  
+
+Nous cherchons un bon compromis.
+
+\subsection{Pourquoi la somme de gaussiennes est un bon compromis}
+
+\begin{itemize}
+  \item \textbf{Simplicité mathématique} : la gaussienne est une fonction lisse, dérivable, intégrable, facile à manipuler analytiquement (intégrales, dérivées, projection 1D).  
+  \item \textbf{Interprétation physique claire} : les paramètres ont un sens direct (position de l’appui, étendue de la zone, amplitude de la force).  
+  \item \textbf{Stabilité numérique} : pas de discontinuités, pas d’instabilités, utile pour résolution numérique ou simulation.  
+  \item \textbf{Flexibilité suffisante} : avec 2 à 3 gaussiennes (talon, avant-pied, éventuellement languette), on reproduit assez bien les schémas de pression observés dans la réalité pour les chaussures rigides.  
+  \item \textbf{Compatibilité avec la RDM} : la projection en charge linéique (ou surfacique) se fait proprement, ce qui permet l’usage des équations classiques de poutre ou de plaque.  
+\end{itemize}
+\vspace{1em}
+En conclusion : \emph{la somme de gaussiennes représente un très bon compromis entre réalisme, simplicité, robustesse et lisibilité}.
+
+\section{Méthode par la somme de gaussiennes}
+
+\subsection{Gaussienne 2D (pression)}
+
+Une gaussienne 2D centrée en $(\mu_x,\mu_y)$ s'écrit :
+\[
+G(x,y)
+=
+A \exp\!\left(
+-\frac{1}{2}
+\left[
+\frac{(x-\mu_x)^2}{\sigma_x^2}
++
+\frac{(y-\mu_y)^2}{\sigma_y^2}
+\right]
+\right).
+\]
+
+Les paramètres ont une interprétation physique directe :
+\begin{itemize}
+    \item $\mu_x$ : position du centre de pression dans la direction avant--arrière ;
+    \item $\mu_y$ : position dans la direction latérale (souvent $\mu_y = 0$ dans une chaussure de ski) ;
+    \item $\sigma_x$ : étendue de la zone d'appui dans la direction longitudinale ;
+    \item $\sigma_y$ : étendue de la zone d'appui dans la direction transversale ;
+    \item $A$ : amplitude (liée à l'intensité locale de la pression).
+\end{itemize}
+
+Les $\sigma$ sont constants car ils représentent la ``taille'' des zones d'appui,
+qui ne changent pas dans une chaussure de ski.
+Les $\mu_x$ peuvent varier si le skieur se penche en avant ou en arrière.
+
+\subsection{Projection en charge linéique (1D)}
+
+La pression $p(x,y)$ est une grandeur 2D (en N/m\(^2\)).
+Pour l'utiliser dans les équations de flexion d'une poutre (ici le ski),
+on doit obtenir une \emph{charge linéique} $q(x)$ (en N/m).
+
+La relation fondamentale est :
+\[
+q(x) = \int_{-\infty}^{\infty} p(x,y)\, dy 
+     = \sum_{i=1}^{K} w_i \underbrace{\int G_i(x,y)\,dy}_{g_i(x)}
+     = \sum_{i=1}^{K} w_i \, g_i(x)
+\]
+
+Cette intégration a une interprétation géométrique simple :
+on ``écrase'' la pression sur toute la largeur du ski pour ne garder
+que la force distribuée le long de l'axe longitudinal.
+
+Dans le cadre de notre TER, seules deux parties de la voûte plantaire par l'intermédiaire de la chaussure sont en contacts avec le ski. Ainsi, il ne sera pas nécessaire d'étudier la charge linéique avec $K>2$. 
+Comme l'intégrale d'une gaussienne selon $y$ reste une gaussienne en $x$,
+on obtient :
+\[
+q(x) = w_h \, g_h(x) + w_f \, g_f(x),
+\]
+où $g_h$ et $g_f$ sont des gaussiennes 1D de même centres $\mu_{x,i}$ et largeurs $\sigma_{x,i}$.
+
+Ainsi, la charge répartie finale est simplement la somme de deux gaussiennes 1D.
+
+\subsection{Utilisation des paramètres et stratégie recommandée}
+
+Les paramètres $\mu_{x,i}$ représentent les centres d'appui longitudinal.
+Si le skieur se penche en avant :
+\begin{itemize}
+    \item le centre $\mu_{x,f}$ (avant-pied) avance 
+    \item le poids $w_f$ augmente 
+    \item la charge s'applique davantage sur l'avant du ski
+\end{itemize}
+
+Inversement, en arrière :
+\begin{itemize}
+    \item $\mu_{x,h}$ recule
+    \item $w_h$ augmente
+    \item la charge se déplace vers l'arrière du ski
+\end{itemize}
+\vspace{1em}
+Pour un usage dans le cadre de notre TER, il sera plus simple de :
+
+\begin{enumerate}
+  \item \textbf{Fixer les positions} \(\mu_{x,i}\) selon la géométrie de la chaussure + semelle (talon, avant-pied), typiquement constants.  
+  \item \textbf{Choisir des poids \(w_i\)} pour simuler différentes distributions de charge (skieur en arrière, neutre, en avant).  
+  \item \textbf{Garder les \(\sigma_{x,i}, \sigma_{y,i}\) constants}, car ils représentent la taille des zones d’appui.  
+  \item Pour un modèle 1D — faire varier seulement les \(w_i\).    
+\end{enumerate}
+
+Cette stratégie permet d’obtenir un modèle \textbf{simple, paramétrable, flexible} — sans recourir à des relations artificielles ou des hypothèses non justifiées entre paramètres.
+
+\subsection{Limites et pistes d’amélioration}
+
+\begin{itemize}
+  \item La somme de gaussiennes reste une approximation — certains détails fins de la pression (interstices, irrégularités, frottements, rigidité de la semelle) ne sont pas modélisés.  
+  \item Pour des analyses plus précises, des modèles basés sur des semelles instrumentées ou des calculs de contact mécanique pourraient être envisagés — mais au prix d’une complexité importante.   
+  \item Les paramètres (positions, écart-type, poids relatifs) devront idéalement être calibrés sur des données expérimentales pour plus de fiabilité.
+\end{itemize}
+\vspace{1em}
+Mais globalement, dans le cadre de notre TER, il ne sera pas possible de réaliser ces pistes d'améliorations proposées.
+
+\section{Conclusion}
+La modélisation d’une charge répartie par une somme de gaussiennes constitue un \textbf{compromis optimal} entre simplicité, rigueur, réalisme et applicabilité dans le cadre de notre TER (du moins dans la flexion 1D). Elle permet de produire des résultats robustes, interprétables et réutilisables facilement. Pour un skieur chaussé, le modèle “talon + avant-pied” avec 2 gaussiennes, poids modulables et positions fixes constitue une base solide et avancée.
+
+
+\section{Bibliographie}
+
+\begin{thebibliography}{9}
+
+\bibitem{Ostadabbas2012}
+S.~Ostadabbas, et al., “Sparse Continuous Plantar Pressure Model (SCPM): A Framework for Foot-Sole Pressure Representation”, \emph{Proceedings of BIBE 2012}, 2012.  
+\texttt{https://ecs.utdallas.edu/research/researchlabs/QoLT/files/pdfs/BIBE12\_Continuous.pdf}
+
+\end{thebibliography}
+
+\end{document}
