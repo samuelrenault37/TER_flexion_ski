@@ -1,0 +1,104 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{tocbibind}
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+
+
+\geometry{left=2.5cm,right=2.5cm,top=3cm,bottom=2.5cm}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\includegraphics[height=1cm]{logo_em.jpg}}
+\fancyhead[C]{\textbf{TER - Etude de la flexion de skis}}
+\fancyfoot[C]{\thepage}
+
+
+\title{\textbf{Travail d'Etude et de Recherche}\\ \textbf{Etude et modélisation de la flexion des skis}}
+\author{Noah RUCHAUD--LANDRAUD, Martin POTAGNIK, Samuel RENAULT, Seydou SECK}
+\date{\textbf{Année scolaire 2025-2026}}
+
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.5\textwidth]{logo_em.jpg}\\[5cm]
+    {\LARGE \textbf{
+Comment la répartition de la charge du skieur le long du ski
+influence-t-elle la courbure et la zone de flexion maximale ?
+}\par}
+\vspace{1.5cm}
+
+{\large \textbf{Travail d'Etude et de Recherche}\par}
+\vspace{0.3cm}
+
+{\large \textbf{MM1 Groupe 1}\par}
+\vspace{5.5cm}
+
+    
+    RUCHAUD--LANDRAUD Noah - SECK Seydou \\ RENAULT Samuel - POTAGNIK Martin\\[0.5cm]
+    
+    {\large \textbf{Tuteurs :} CATY Olivier - DURUFLE Marc}\\[2cm]
+    
+    {\large \textbf{Année 2025-2026}}
+\end{titlepage}
+
+
+\tableofcontents
+
+\newpage
+
+\section{Résumé}
+\section{Introduction}
+
+
+\newpage
+\section{Modélisation 1D}
+\subsection{Modélisation et étude analytique}
+\subsubsection{Modélisation mécanique du ski}
+\subsubsection{Hypothèses et simplifications}
+\subsubsection{Formulation de l'équation de la flexion}
+\subsubsection{Résolution analytique}
+
+\newpage
+
+
+\subsection{Méthode numérique}
+\subsubsection{Discrétisation du problème}
+\subsubsection{Schéma des différences finies}
+\subsubsection{Construction du système linéaire}
+\subsubsection{Résolution numérique}
+
+\newpage
+
+
+\subsection{Etude expérimentale}
+\subsubsection{Présentation du dispositif expérimental}
+\subsubsection{Mesures et résultats}
+\subsubsection{Analyse des résultats expérimentaux}
+
+\newpage
+
+
+\subsection{Discussion}
+\subsubsection{Résumé des résultats}
+\subsubsection{Limites du modèle et perspectives d'amélioration}
+\section{Conclusion générale}
+
+\newpage
+
+
+\begin{thebibliography}{99}
+\bibitem{article1} Auteur 1, Auteur 2, Titre de l'article, Journal, Année.
+\bibitem{livre1} Auteur 1, Titre du livre, Éditeur, Année.
+\end{thebibliography}
+
+\end{document}
