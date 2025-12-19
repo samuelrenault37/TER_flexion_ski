@@ -97,8 +97,45 @@ influence-t-elle la courbure et la zone de flexion maximale ?
 
 
 \begin{thebibliography}{99}
-\bibitem{article1} Auteur 1, Auteur 2, Titre de l'article, Journal, Année.
-\bibitem{livre1} Auteur 1, Titre du livre, Éditeur, Année.
+
+\bibitem{site1}
+BULOTA, M. (2021).
+Sooth Ski. \textit{Ski : Longueur + sidecut + rayon + rockers + flexion + torsion =compliqué}.\\
+\url{https://soothski.com/proprietes-skis-expliquees/2021/ski-longueur-sidecut-rayon-rockers-flexion-torsion-complique/?lang=fr}
+
+\bibitem{these1}
+CLERC, C. (1986).
+\textit{Modélisation de poutres composites : application aux skis}.
+Institut National des Sciences Appliquées de Lyon.\\
+\url{https://theses.insa-lyon.fr/publication/1986ISAL0006/these.pdf}
+
+\bibitem{site5}
+EGC (2025).
+\textit{Théorie des poutres}.\\
+\url{https://www.etudiantgeniecivil.com/theorie-des-poutres/}
+
+\bibitem{these2}
+FALDA-BUSCAIOT, T. (2017).
+\textit{Analyse biomécanique en ski alpin : conception et validation d’un nouveau capteur d’efforts 3D à l’interface skieur--environnement}.
+Université Grenoble Alpes.\\
+\url{https://www.researchgate.net/publication/325450528}
+
+\bibitem{site2}
+GLISSATTITUDE.
+\textit{Souplesse et rigidité des skis}.\\
+\url{https://www.glissattitude.com/blog/ski-alpin-et-racing-11/souplesse-et-rigidite-des-skis-4737}
+
+\bibitem{site4}
+GLISSATTITUDE.
+\textit{Les fixations de ski}.\\
+\url{https://www.glissattitude.com/blog/ski-alpin-et-racing-11/les-fixations-de-ski-2767}
+
+\bibitem{memoire2}
+MIMOUNA, R. (2017).
+\textit{Application de la méthode des différences finies au calcul de poutres en flexion}.
+Université Ibn Khaldoun de Tiaret.\\
+\url{http://dspace.univ-tiaret.dz/bitstream/123456789/2623/1/TH.M.GC.FR.2017.21.pdf}
+
 \end{thebibliography}
 
 \end{document}
