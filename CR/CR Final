@@ -10,7 +10,9 @@
 \usepackage{tocbibind}
 \usepackage{fancyhdr}
 \usepackage{lipsum}
-
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{patterns}
 
 \geometry{left=2.5cm,right=2.5cm,top=3cm,bottom=2.5cm}
 
@@ -59,6 +61,95 @@ influence-t-elle la courbure et la zone de flexion maximale ?
 \section{Résumé}
 \section{Introduction}
 
+\section{Contexte}
+
+Dans le cadre de ce Travail d’Étude et de Recherche, le ski est modélisé comme une poutre élancée soumise à des efforts verticaux, conformément aux hypothèses classiques de la théorie d’Euler--Bernoulli. Cette approche permet de décrire la flexion du ski le long de son axe longitudinal, en supposant des déformations faibles et un comportement élastique linéaire du matériau. \vspace{1em}
+
+Le ski considéré dans cette étude, représenté sur la Figure~\ref{fig:modele}, est de longueur $L$ et est simplement appuyé à ses extrémités afin de représenter le contact global avec la neige. La flexion étudiée correspond à une sollicitation dans un plan unique, sans prise en compte des effets de torsion. La répartition du poids du skieur est modélisée le long du ski par deux zones d’appui principales : le talon et l’avant-pied. Cette approche, couramment utilisée en biomécanique pour l’analyse des pressions plantaires \cite{Ostadabbas2012}, s’adapte naturellement au cas du ski, en fournissant une description simplifiée mais physiquement pertinente de la transmission des efforts, comme illustré par la Figure~\ref{fig:chaussure}.
+
+
+\begin{figure}[h]
+\centering
+
+% -------- Figure de gauche : TikZ --------
+\begin{minipage}[t]{0.62\textwidth}
+\centering
+\begin{tikzpicture}[xscale=5, yscale=1.2]
+
+% Paramètres
+\def\L{1.6}        % longueur du ski (m)
+\def\xo{0.8}       % centre
+\def\d{0.06}       % demi-distance entre appuis
+\def\s{0.02}       % largeur gaussienne
+
+% Deux gaussiennes (appuis du skieur)
+\draw[blue!70!black, thick, domain=0:1.6, samples=200]
+plot (\x,{
+0.25*exp(-((\x-\xo-\d)^2)/(2*\s^2))
++
+0.25*exp(-((\x-\xo+\d)^2)/(2*\s^2))
+});
+
+% Zone hachurée (charge répartie)
+\draw[
+  pattern=vertical lines,
+  pattern color=blue!90
+]
+plot[domain=0:\L, samples=300]
+(\x,{
+0.25*exp(-((\x-\xo-\d)^2)/(2*\s^2))
++
+0.25*exp(-((\x-\xo+\d)^2)/(2*\s^2))
+})
+-- (\L,0) -- (0,0) -- cycle;
+
+% Courbe de la charge
+\draw[blue, thick, domain=0:\L, samples=300]
+plot (\x,{
+0.25*exp(-((\x-\xo-\d)^2)/(2*\s^2))
++
+0.25*exp(-((\x-\xo+\d)^2)/(2*\s^2))
+});
+
+% Ski
+\draw[thick] (0,0) -- (\L,0);
+
+% Appuis simples
+\draw[red, thick] (0,0) -- (-0.07,-0.28) -- (0.07,-0.28) -- cycle;
+\draw[red, thick] (\L,0) -- (\L-0.07,-0.28) -- (\L+0.07,-0.28) -- cycle;
+
+% Flèche longueur L
+\draw[<->, thick]
+(0,-0.45) -- (\L,-0.45)
+node[midway, below] {$L$};
+
+\end{tikzpicture}
+\caption{Modélisation mécanique 1D du ski assimilé à une poutre simplement appuyée}
+\label{fig:modele}
+\end{minipage}
+\hfill
+% -------- Figure de droite : image --------
+\begin{minipage}[t]{0.34\textwidth}
+\centering
+\includegraphics[width=0.6\textwidth]{Chaussure_ski.png}
+\caption{Illustration des deux principales zones de pression plantaire}
+\label{fig:chaussure}
+\end{minipage}
+
+\end{figure}
+
+\vspace{1em}
+
+Ainsi, pour la suite de cette étude et afin de simplifier l’analyse, les hypothèses suivantes sont adoptées :
+\begin{itemize}
+    \item le poids propre du ski est négligé devant la charge appliquée
+    \item le ski est initialement rectiligne avant chargement
+    \item le matériau est supposé homogène et isotrope
+    \item la flexion se produit dans un seul plan
+    \item les appuis sont modélisés comme des appuis simples idéalisés, sans transmission de moment
+\end{itemize}
+\vspace{1em}
+Ces hypothèses permettent d’isoler les mécanismes dominants de la flexion et de limiter la complexité du modèle.
 
 \newpage
 \section{Modélisation 1D}
@@ -97,6 +188,11 @@ influence-t-elle la courbure et la zone de flexion maximale ?
 
 
 \begin{thebibliography}{99}
+
+\bibitem{Ostadabbas2012}
+M.D, NOURANI, M., OSTADABBAS, S., POMPEO, M., (2012), \textit{Continuous Plantar Pressure Modeling Using Sparse
+Sensors}, Proceedings of BIBE 2012
+\url{https://ecs.utdallas.edu/research/researchlabs/QoLT/files/pdfs/BIBE12\_Continuous.pdf}
 
 \bibitem{site1}
 BULOTA, M. (2021).
