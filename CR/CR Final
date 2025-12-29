@@ -153,11 +153,105 @@ Ces hypothèses permettent d’isoler les mécanismes dominants de la flexion et
 
 \newpage
 \section{Modélisation 1D}
-\subsection{Modélisation et étude analytique}
-\subsubsection{Modélisation mécanique du ski}
-\subsubsection{Hypothèses et simplifications}
-\subsubsection{Formulation de l'équation de la flexion}
-\subsubsection{Résolution analytique}
+
+\subsection{Etude Analytique}
+
+\subsubsection{Modélisation de la charge répartie}
+
+Dans une situation réelle de ski, la charge exercée par le skieur n’est pas ponctuelle mais répartie sur une zone correspondant à la surface de contact de la chaussure avec le ski.  
+Cette charge est modélisée par une charge répartie continue, concentrée principalement sous les zones d’appui des pieds.
+
+Dans ce travail, la charge répartie est représentée comme la somme de deux fonctions gaussiennes symétriques :
+\begin{equation}
+q(x) = w_1\,g_1(x) + w_2\,g_2(x)
+\label{eq:1}
+\end{equation}
+avec :
+\begin{equation}
+g_i(x) = \exp\!\left(-\frac{(x-\mu_i)^2}{2\sigma_i^2}\right)
+\label{eq:2}
+\end{equation}
+où :
+\begin{itemize}
+    \item \( \mu_i \) désigne la position longitudinale du centre de chaque appui
+    \item \( \sigma_i \) caractérise l’étendue de la zone de contact
+    \item \( w_i \) représente l’intensité exercée par le skieur associée à chaque zone d’appui
+\end{itemize}
+
+\vspace{1em}Ainsi, lorsqu'un skieur possède la projection de son centre de gravité entre ses pieds, on a $w_1 = w_2$, lorsqu'il est penché en avant on a $w_1 > w_2$ et dans le cas inverse on a $w_1 < w_2$.
+
+\vspace{1em} Dans le cas d’un système symétrique, c'est-à-dire lorsqu'on considère que les deux gaussiennes sont centrées à une distance $\frac{L}{2}$, on a naturellement :
+\vspace{.5em}
+
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+\mu_2 = L - \mu_1
+\end{equation}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+\sigma_1 = \sigma_2 = \sigma
+\end{equation}
+\end{minipage}
+
+\subsubsection{Relation fondamentale de la flexion}
+
+Dans le cadre de la théorie d’Euler--Bernoulli, la relation fondamentale reliant la déformée de la poutre au moment fléchissant interne s’écrit :
+\begin{equation}
+EI\,y^{(2)}(x) = M(x)
+\end{equation}
+où :
+\begin{itemize}
+    \item \( y(x) \) désigne la flèche de la poutre 
+    \item \( y^{(2)}(x) \) correspond à la courbure 
+    \item \( M(x) \) est le moment fléchissant interne
+    \item \( E \) est le module d’Young et \( I \) le moment quadratique de la section
+\end{itemize}
+
+\vspace{1em}  Dans le cas d’une charge répartie \( q(x) \), le moment fléchissant est relié à la charge par les relations d’équilibre internes :
+
+\vspace{.5em}
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+T'(x) = - q(x)
+\end{equation}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+M'(x) = T(x)
+\end{equation}
+\end{minipage}
+
+\vspace{1em}
+Ce qui conduit à la relation : 
+\begin{equation}
+EI\,y^{(4)}(x) = -q(x)
+\label{eq:8}
+\end{equation}
+
+\subsubsection{Formulation analytique du problème}
+
+Bien que l’introduction de la dérivée quatrième conduise à une équation différentielle d’ordre plus élevé, nécessitant en théorie quatre conditions aux limites, cette formulation se révèle plus adaptée dans le cadre de ce TER. En effet, la charge répartie étant décrite par des fonctions gaussiennes, l’écriture directe de l’équation permet de traiter analytiquement et numériquement la répartition des efforts sans avoir à intégrer explicitement la charge, ce qui simplifie la suite de l’analyse.
+
+\vspace{1em}Dans le cadre de la théorie d’Euler--Bernoulli, la flèche est nulle au niveau des appuis simples, et aucun moment fléchissant n’y est transmis. Cela permet ainsi d'obtenir les conditions aux limites associées  :
+\[
+\begin{cases}
+y(0) = 0 \\
+y(L) = 0 \\
+y^{(2)}(0) = 0 \\
+y^{(2)}(L) = 0
+\end{cases}
+\]
+
+\vspace{1em} On a donc à l'aide des équations \eqref{eq:1}, \eqref{eq:2} et \eqref{eq:8} : 
+\begin{equation}
+    EI\,y^{(4)}(x) = -w_1 \exp\!\left(-\frac{(x-\mu_1)^2}{2\sigma^2}\right)
+ - w_2 \exp\!\left(-\frac{(x-\mu_2)^2}{2\sigma^2}\right)
+\end{equation}
+
+\vspace{1em}Cette équation fournit une relation directe entre la charge répartie et la variation de la courbure du ski via la dérivée quatrième. Cela permet ainsi de décrire l'influence locale de la répartition de efforts sur la flexion du ski et constitue le point de départ de la résolution numérique présentée dans la section suivante.
 
 \newpage
 
