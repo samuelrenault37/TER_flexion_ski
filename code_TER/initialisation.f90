@@ -5,17 +5,15 @@ module init
     
 contains
 
-  subroutine init_A_b(A, b, h, L, N)
+  subroutine init_A_b(A, b, h, N)
         integer, intent(in) :: N
-        real(PR), intent(in) :: h, L
+        real(PR), intent(in) :: h
         real(PR), dimension(N,N), intent(out) :: A
         real(PR), dimension(N), intent(out) :: b
         integer :: k
-        real(PR) :: F, E, I, Mx, x
+        real(PR) :: Mx, x, I_fs, I_sfs, L
 
-        E = 10d9 ! en Pa
-        F = 784.8_PR ! en N
-        I = 1.44d-8 ! en m**4
+        L = (borne_b - borne_a)
 
         A = 0
 
@@ -25,7 +23,9 @@ contains
         ! Condition pour la dernière ligne
         A(N, N) = 1
 
-
+        !Les intégrales sur f sont calculée directement à partir de la discrétisation faite pour la méthode des différences finies
+        I_fs = 0
+        I_sfs = 0
         ! A
         do k = 2, N-1
     
@@ -35,21 +35,41 @@ contains
             A(k, k  ) = -2
             A(k, k+1) = 1
 
-            ! Moment M(x) par morceaux
+            ! Moment M(x) par morceaux pour la fléxion 3 pts
             
-            if (x <= L/2._PR) then
-                Mx = 0.5_PR*F*x
-            else
-                Mx = 0.5_PR*F*(L-x)
-            end if
+            ! if (x <= L/2._PR) then
+            !     Mx = 0.5_PR*F*x
+            ! else
+            !     Mx = 0.5_PR*F*(L-x)
+            ! end if
 
+            ! Moment M(x) pour une charge répartie f_rep
+            I_fs = I_fs + f_rep(x-(h/2))*h
+            I_sfs = I_sfs + (x-(h/2))*f_rep(x-(h/2))*h
+
+            Mx = 0.5_PR*F*x - x*(I_fs) + I_sfs
+            
             b(k) = (h**2*Mx/(E*I))
             
         end do
 
+        print *, I_fs ! pour vérifier que le coefficient A est bien choisi
+
         b(1) = 0
         b(N) = 0
     end subroutine init_A_b
+
+    function f_rep(x) result(fx)
+        real(PR), intent(in) :: x
+        real(PR) :: fx, A, pic1, pic2, largeur_pic
+
+        A = F/0.300795393_PR ! nb obtenu en calculant 2* l'Integrale de 0 à L de exp((-1/2)*(x - pic1)**2/(largeur_pic**2))
+        pic1 = 0.4785_PR ! valeur réfléchie
+        pic2 = 0.7385_PR ! valeur réfléchie
+        largeur_pic = 0.06_PR ! valeur réfléchie
+
+        fx = A*EXP(-(1._PR/2)*(((x - pic1)**2)/(largeur_pic**2))) + A*EXP(-(1._PR/2)*(((x - pic2)**2)/(largeur_pic**2)))
+    end function f_rep
 
     ! A avec une seule zone non nul par ligne
     subroutine convert_A_CSR(A, A_val, A_col, A_row, N, NN)
