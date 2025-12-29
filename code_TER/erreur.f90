@@ -8,14 +8,13 @@ module err
 
     contains
 
-    function f_sol(L, x) result(y)
-        real(PR), intent(in) :: x, L
-        real(PR) :: y, E, F, I
+    function f_sol(x) result(y)
+        real(PR), intent(in) :: x
+        real(PR) :: y, L
 
-        E = 10d9 ! en Pa
-        F = 784.8_PR ! en N
-        I = 1.44d-8 ! en m**4
+        L = (borne_b - borne_a)
 
+        ! sol analytique pour la fléxion 3pts
         if (x <= L/2) then
             y = - (F*x*(3._PR*L*L-4._PR*x**2)/(48._PR*E*I))
         else
@@ -24,10 +23,9 @@ module err
     
     end function f_sol
 
-    subroutine print_err(meth, borne_a, borne_b, file)
+    subroutine print_err(meth, file)
         character(len=*), intent(in) :: file
         integer, intent(in) :: meth
-        real(PR), intent(in) :: borne_a, borne_b
         real(PR) :: h, err_max, err_cur
         integer :: N, NN, i, k
         real(PR), dimension(:), allocatable :: b, A_val, x, sol
@@ -45,7 +43,7 @@ module err
             allocate(x(N))
             allocate(sol(N))
 
-            call init_A_b(A, b, h, borne_b, N)
+            call init_A_b(A, b, h, N)
 
             select case(meth)
             case(1)
@@ -74,7 +72,7 @@ module err
 
             err_max = 0
             do k = 1, N
-                err_cur = ABS(f_sol(borne_b - borne_a, borne_a + h*(k-1)) - x(k))
+                err_cur = ABS(f_sol(borne_a + h*(k-1)) - x(k))
                 if (err_cur > err_max) then
                     err_max = err_cur
                 end if
@@ -102,7 +100,7 @@ module err
         h = (borne_b-borne_a)/(N_sol-1)
 
         do i = 1, N_sol
-            x_sol(i) = f_sol(borne_b-borne_a, borne_a + h*(i-1))
+            x_sol(i) = f_sol(borne_a + h*(i-1))
         end do
     
         call write_in_file("../doc/sol.dat", x_sol, N_sol, h, borne_a)
