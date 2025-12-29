@@ -197,7 +197,7 @@ où :
 
 \subsubsection{Relation fondamentale de la flexion}
 
-Dans le cadre de la théorie d’Euler--Bernoulli, la relation fondamentale reliant la déformée de la poutre au moment fléchissant interne s’écrit :
+Dans le cadre de la théorie d’Euler--Bernoulli \cite{site5}, la relation fondamentale reliant la déformée de la poutre au moment fléchissant interne s’écrit :
 \begin{equation}
 EI\,y^{(2)}(x) = M(x)
 \end{equation}
