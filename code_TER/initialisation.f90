@@ -17,46 +17,94 @@ contains
 
         A = 0
 
-        ! Condition pour la première ligne 
-        A(1,1) = 1
+        select case(cas_init)
+            case(1)
+                ! Condition pour la première ligne 
+                A(1,1) = 1
 
-        ! Condition pour la dernière ligne
-        A(N, N) = 1
+                ! Condition pour la dernière ligne
+                A(N, N) = 1
 
-        !Les intégrales sur f sont calculée directement à partir de la discrétisation faite pour la méthode des différences finies
-        I_fs = 0
-        I_sfs = 0
-        ! A
-        do k = 2, N-1
-    
-            x = (k-1)*h
-
-            A(k, k-1) = 1
-            A(k, k  ) = -2
-            A(k, k+1) = 1
-
-            ! Moment M(x) par morceaux pour la fléxion 3 pts
+                !Les intégrales sur f sont calculée directement à partir de la discrétisation faite pour la méthode des différences finies
+                I_fs = 0
+                I_sfs = 0
+                ! A
+                do k = 2, N-1
             
-            ! if (x <= L/2._PR) then
-            !     Mx = 0.5_PR*F*x
-            ! else
-            !     Mx = 0.5_PR*F*(L-x)
-            ! end if
+                    x = (k-1)*h
 
-            ! Moment M(x) pour une charge répartie f_rep
-            I_fs = I_fs + f_rep(x-(h/2))*h
-            I_sfs = I_sfs + (x-(h/2))*f_rep(x-(h/2))*h
+                    A(k, k-1) = 1
+                    A(k, k  ) = -2
+                    A(k, k+1) = 1
 
-            Mx = 0.5_PR*F*x - x*(I_fs) + I_sfs
+                    ! Moment M(x) par morceaux pour la fléxion 3 pts
+                    
+                    ! if (x <= L/2._PR) then
+                    !     Mx = 0.5_PR*F*x
+                    ! else
+                    !     Mx = 0.5_PR*F*(L-x)
+                    ! end if
+
+                    ! Moment M(x) pour une charge répartie f_rep
+                    I_fs = I_fs + f_rep(x-(h/2))*h
+                    I_sfs = I_sfs + (x-(h/2))*f_rep(x-(h/2))*h
+
+                    Mx = 0.5_PR*F*x - x*(I_fs) + I_sfs
+                    
+                    b(k) = (h**2*Mx/(E*I))
+                    
+                end do
+
+                !print *, I_fs ! pour vérifier que le coefficient A est bien choisi
+
+                b(1) = 0
+                b(N) = 0
+
+            case(2)
+                ! Condition sur la flèche aux extrémitées
+                A(1,1) = 1
+
+                A(N, N) = 1
+                
+                ! Condition sur les moments aux extrémitées
+                A(2,1) = 1
+                A(2,2) = -2
+                A(2,3) = 1
+
+                A(N-1, N-2) = 1
+                A(N-1, N-1) = -2
+                A(N-1, N) = 1
+
+                do k = 3, N-2
             
-            b(k) = (h**2*Mx/(E*I))
+                    x = (k-1)*h
+
+                    A(k, k-2) = 1
+                    A(k, k-1) = -4
+                    A(k, k  ) = 6
+                    A(k, k+1) = -4
+                    A(k, k+2) = 1
+                    
+                    b(k) = -h**4*f_rep(x)/(E*I)
+                    
+                end do
+
+                !print *, I_fs ! pour vérifier que le coefficient A est bien choisi
+
+                
+                ! Condition sur la flèche aux extrémitées
+                b(1) = 0
+                b(N) = 0
+
+                ! Condition sur les moments aux extrémitées
+                b(2) = h**2*0
+                b(N-1) = h**2*0
             
-        end do
+            case default
+                print *, "pas d'initialisation associée à ce cas"
 
-        print *, I_fs ! pour vérifier que le coefficient A est bien choisi
+        end select
 
-        b(1) = 0
-        b(N) = 0
     end subroutine init_A_b
 
     function f_rep(x) result(fx)
