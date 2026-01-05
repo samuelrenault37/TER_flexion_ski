@@ -257,8 +257,55 @@ y^{(2)}(L) = 0
 
 
 \subsection{Méthode numérique}
+L’objectif de cette partie est de modéliser la flexion du ski à l’aide d’outils numériques, afin de relier les équations théoriques de la poutre à des solutions approchées calculables.  
+Pour cela, nous utiliserons la \textbf{méthode des différences finies}, qui permet de discrétiser les équations différentielles régissant la flexion et d’obtenir un système linéaire reliant les grandeurs mécaniques du ski. 
 \subsubsection{Discrétisation du problème}
+Les équations obtenues par l'étude analytique régissent la poutre en tout point de cette dernière. Cela constitue donc une infinité de points, ce qui n'est pas appréhendable par une machine. Il est donc indispensable de discrétiser notre problème pour le résoudre numériquemnet. Pour cela on choisi une subdivison contenant un nombre fini $N$ de points de discrétisations :
+
+\vspace{1em}
+
+Pour une fonction $y(x)$ définie sur un intervalle $[a,b]$.
+\[
+x_1 = a,\quad x_2 = a + h,\quad x_3 = a + 2h,\quad \dots,\quad x_N = b,
+\]
+où $h = \dfrac{b - a}{N-1}$ est le pas du maillage.
+
 \subsubsection{Schéma des différences finies}
+La méthode des différences finies est une méthode numérique permettant d'approcher
+les solutions d'équations différentielles à l'aide d'équations algébriques.
+L'idée principale est de remplacer les dérivées par des différences
+calculées à partir de valeurs de la fonction sur un ensemble discret de points.
+
+\vspace{1em}
+
+Pour ce faire on utilise le developpement de Taylor. En regardant en $x_i$, pour un pas $h$, on obtient :
+\[
+y(x_i + h)
+  = y(x_i)
+  + h\,y^{(1)}(x_i)
+  + \frac{h^2}{2!}\,y^{(2)}(x_i)
+  + \frac{h^3}{3!}\,y^{(3)}(x_i)
+  + \cdots
+\]
+\[
+y(x_i - h)
+  = y(x_i)
+  - h\,y^{(1)}(x_i)
+  + \frac{h^2}{2!}\,y^{(2)}(x_i)
+  - \frac{h^3}{3!}\,y^{(3)}(x_i)
+  + \cdots
+\]
+
+En combinant ces expansions (addition, soustraction, etc.), on fait disparaître 
+certains termes et apparaître les dérivées recherchées.  
+C’est ce principe qui permet de construire tous les schémas en différences finies sous la forme :
+\[
+y^{(k)}(x_i)
+\approx
+\sum_{j=-m}^{m} \alpha_j\, y(x_i + jh),
+\]
+où les coefficients $\alpha_j$ sont déterminés en identifiant les termes du développement de Taylor.
+
 \subsubsection{Construction du système linéaire}
 \subsubsection{Résolution numérique}
 
