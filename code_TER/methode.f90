@@ -103,7 +103,7 @@ module meth
         integer :: i, max_iter
 
         x = 0
-        max_iter = 100000000
+        max_iter = 10000
 
         call matvec_csr(N, NN, A_val, A_col, A_row, x, Ap)
         r = b - Ap

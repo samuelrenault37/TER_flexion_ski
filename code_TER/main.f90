@@ -12,7 +12,7 @@ program main
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
-    N = 100
+    N = 5000
 
     h = (borne_b-borne_a)/(N-1)
 

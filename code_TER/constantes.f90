@@ -9,5 +9,5 @@ module const
     integer, parameter :: N_sol = 1000 !pas de discretisation pour tracer la solution analytique (pas de raison de la modifier)
     ! 1 -> resolution avec dérivée seconde
     ! 2 -> avec dérivée quatrième
-    integer, parameter :: cas_init = 1
+    integer, parameter :: cas_init = 2
 end module const

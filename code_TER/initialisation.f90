@@ -111,12 +111,12 @@ contains
         real(PR), intent(in) :: x
         real(PR) :: fx, A, pic1, pic2, largeur_pic
 
-        A = F/0.300795393_PR ! nb obtenu en calculant 2* l'Integrale de 0 à L de exp((-1/2)*(x - pic1)**2/(largeur_pic**2))
+        A = F/0.4253889206_PR ! nb obtenu en calculant 2* l'Integrale de 0 à L de exp((-1/2)*(x - pic1)**2/(largeur_pic**2))
         pic1 = 0.4785_PR ! valeur réfléchie
         pic2 = 0.7385_PR ! valeur réfléchie
         largeur_pic = 0.06_PR ! valeur réfléchie
 
-        fx = A*EXP(-(1._PR/2)*(((x - pic1)**2)/(largeur_pic**2))) + A*EXP(-(1._PR/2)*(((x - pic2)**2)/(largeur_pic**2)))
+        fx = A*EXP(-(1._PR/2)*(((x - pic1)**2)/(2*largeur_pic**2))) + A*EXP(-(1._PR/2)*(((x - pic2)**2)/(2*largeur_pic**2)))
     end function f_rep
 
     ! A avec une seule zone non nul par ligne
