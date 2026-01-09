@@ -12,7 +12,7 @@ program main
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
-    N = 5000
+    N = 100
 
     h = (borne_b-borne_a)/(N-1)
 
@@ -36,6 +36,8 @@ program main
     
     call write_in_file("../doc/res_solv.dat", x, N, h, borne_a)
 
+    call write_exp_val()
+
     ! correspondance des methodes avec des numéros pour utilisé correctement print_err
     ! meth_piv -> 1
     ! meth_lapack -> 2
@@ -44,7 +46,7 @@ program main
     ! call print_err(2, "../doc/erreur.dat")  <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
     ! et un seul appel est suffisant pour le moment
      
-    !call print_sol(borne_a, borne_b, N_sol)
+    call print_sol(borne_a, borne_b, N_sol)
 
     deallocate(b)
     deallocate(A)

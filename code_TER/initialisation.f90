@@ -37,14 +37,6 @@ contains
                     A(k, k  ) = -2
                     A(k, k+1) = 1
 
-                    ! Moment M(x) par morceaux pour la fléxion 3 pts
-                    
-                    ! if (x <= L/2._PR) then
-                    !     Mx = 0.5_PR*F*x
-                    ! else
-                    !     Mx = 0.5_PR*F*(L-x)
-                    ! end if
-
                     ! Moment M(x) pour une charge répartie f_rep
                     I_fs = I_fs + f_rep(x-(h/2))*h
                     I_sfs = I_sfs + (x-(h/2))*f_rep(x-(h/2))*h
@@ -99,7 +91,39 @@ contains
                 ! Condition sur les moments aux extrémitées
                 b(2) = h**2*0
                 b(N-1) = h**2*0
+
+            case(3)
+                ! Condition pour la première ligne 
+                A(1,1) = 1
+
+                ! Condition pour la dernière ligne
+                A(N, N) = 1
+
+                ! A
+                do k = 2, N-1
             
+                    x = (k-1)*h
+
+                    A(k, k-1) = 1
+                    A(k, k  ) = -2
+                    A(k, k+1) = 1
+
+                    ! Moment M(x) par morceaux pour la fléxion 3 pts
+                    
+                    if (x <= L/2._PR) then
+                        Mx = 0.5_PR*F*x
+                    else
+                        Mx = 0.5_PR*F*(L-x)
+                    end if
+                    
+                    b(k) = (h**2*Mx/(E*I))
+                    
+                end do
+
+                !print *, I_fs ! pour vérifier que le coefficient A est bien choisi
+
+                b(1) = 0
+                b(N) = 0
             case default
                 print *, "pas d'initialisation associée à ce cas"
 
@@ -111,9 +135,9 @@ contains
         real(PR), intent(in) :: x
         real(PR) :: fx, A, pic1, pic2, largeur_pic
 
-        A = F/0.4253889206_PR ! nb obtenu en calculant 2* l'Integrale de 0 à L de exp((-1/2)*(x - pic1)**2/(largeur_pic**2))
-        pic1 = 0.4785_PR ! valeur réfléchie
-        pic2 = 0.7385_PR ! valeur réfléchie
+        A = F/0.4253889216_PR ! nb obtenu en calculant 2* l'Integrale de 0 à L de exp((-1/2)*(x - pic1)**2/(largeur_pic**2))
+        pic1 = (borne_b - borne_a)/2 - 0.13 ! valeur réfléchie
+        pic2 = (borne_b - borne_a)/2 + 0.13 ! valeur réfléchie
         largeur_pic = 0.06_PR ! valeur réfléchie
 
         fx = A*EXP(-(1._PR/2)*(((x - pic1)**2)/(2*largeur_pic**2))) + A*EXP(-(1._PR/2)*(((x - pic2)**2)/(2*largeur_pic**2)))

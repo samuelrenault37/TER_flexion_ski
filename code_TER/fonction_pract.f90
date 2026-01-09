@@ -39,6 +39,33 @@ module fonct
         close(1)
     end subroutine write_in_file
 
+    subroutine write_exp_val()
+        integer :: N_exp
+        real(PR), dimension(:), allocatable  ::  x_exp, y_exp
+        integer :: i
+
+        N_exp = 26
+
+        allocate(x_exp(N_exp))
+        allocate(y_exp(N_exp))
+
+        x_exp = (/0.0002565, 0.04622, 0.1030, 0.1570, 0.1980, 0.2500, 0.3010, 0.3530, 0.4030, 0.4560, 0.5050, 0.5570, 0.6050, 0.6550, 0.7050, 0.7540, 0.8050, 0.8540, 0.9040, 0.9540, 1.004, 1.055, 1.104, 1.157, 1.210, 1.226/)
+
+        y_exp = (/0.000387, -0.002559, -0.006685, -0.01007, -0.01081, -0.01214, -0.01493, -0.01722, -0.0193, -0.02222, -0.02159, -0.0218, -0.02138, -0.02138, -0.02034, -0.01992, -0.01909, -0.01759, -0.01536, -0.01332, -0.0109, -0.007748, -0.002737, 0.001347, 0.005059, 0.005039/)
+
+        open(unit = 1, file = "../doc/exp.dat", action = "write")
+        write (1, '(A)') "#abscisse               ordonnée"
+        do i = 1,N_exp
+            write (1, *) x_exp(i), y_exp(i)
+        end do
+        close(1)
+
+        deallocate(x_exp)
+        deallocate(y_exp)
+
+    end subroutine write_exp_val
+
+
     subroutine recup_NN(A, N, NN)
         integer, intent(in) :: N
         real(PR), dimension(N,N), intent(in) :: A
