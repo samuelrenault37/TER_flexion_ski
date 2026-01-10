@@ -43,10 +43,14 @@ program main
     ! meth_lapack -> 2
     ! meth_grad_conj -> 3
 
-    ! call print_err(2, "../doc/erreur.dat")  <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
+    ! correspondance des cas de solutions avec des numéros pour utilisé correctement print_err
+    ! solution analytique connu (à definir dans la fonction prévu) -> 1
+    ! solution exact approchée avec un grand pas de discrétisation -> 2
+
+    call print_err(2, "../doc/erreur.dat", 2)  ! <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
     ! et un seul appel est suffisant pour le moment
      
-    call print_sol(borne_a, borne_b, N_sol)
+    ! call print_sol(borne_a, borne_b, N_sol)
 
     deallocate(b)
     deallocate(A)
