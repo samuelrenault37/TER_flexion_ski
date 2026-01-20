@@ -3,3 +3,5 @@
 exec*
 *.out
 *.toc
+*.o
+*.mod
