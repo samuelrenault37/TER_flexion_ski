@@ -1,3 +1,4 @@
+
 \documentclass[12pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
@@ -55,11 +56,33 @@ influence-t-elle la courbure et la zone de flexion maximale ?
 
 
 \tableofcontents
+\setcounter{page}{0}
+\clearpage
 
 \newpage
 
 \section{Résumé}
+Ce TER étudie l’influence de la répartition de la charge exercée par le skieur le long du ski sur la courbure de celui-ci et sur la position de la zone de flexion maximale. L'objectif de ce travail est de comprendre comment les variations de position du centre de masse du skieur modifient la déformation longitudinale du ski, notamment à l'aide d'une modélisation numérique et d'une comparaison expérimentale. \vspace{1em}
+
+L’étude s’appuie sur une modélisation analytique unidimensionnelle du ski, assimilé à une poutre soumise à des charges réparties, ainsi que  d'une modélisation numérique décrivant la déformation du ski en fonction de la charge répartie du skieur. Des mesures expérimentales ont également été réalisées afin d'illustrer le comportement réel du ski et de mettre en évidence les limites de la modélisation proposée.\vspace{1em}
+
+Les résultats obtenus permettent de mettre en évidence le lien entre la répartition des efforts, la courbure du ski et la position de la zone de flexion maximale de ce dernier. Ce travail apporte ainsi des bases mécaniques utiles à la compréhension du fonctionnement du ski et ouvre des perspectives pour l’optimisation de sa conception et de son utilisation.\vspace{1em}
+
+\section*{Mots clés}
+
+\textbf{Flexion de ski / Modélisation 1D / Charge répartie / Différences Finies}
+
 \section{Introduction}
+Le ski alpin est l’un des sports de glisse les plus pratiqués dans le monde et constitue à la fois une activité de loisir, de compétition et un domaine d’innovation technologique. L’évolution du matériel au fil des années a fortement contribué à améliorer la sécurité, le confort et les performances des skieurs. Parmi les éléments clés de cet équipement, le ski lui-même joue un rôle central dans l’interaction entre le skieur et la neige.\vspace{1em}
+
+Le ski est un système mécanique dont le comportement dépend à la fois des caractéristiques du matériel et de la position du skieur. La déformation du ski sous l’effet du poids du skieur dépend directement de la répartition de la charge le long du ski, et joue un rôle essentiel dans la stabilité et la maniabilité du ski.\vspace{1em}
+
+D’un point de vue mécanique, le ski peut être assimilé à une structure flexible soumise à des charges réparties. Les variations de position du centre de masse du skieur modifient la courbure longitudinale du ski ainsi que la zone et la valeur de la flexion maximale. L'objectif de ce TER est d’analyser l’influence de cette répartition de charge sur la déformation du ski. \vspace{.5em}
+
+Ainsi, la problématique centrale de ce TER se pose comme suit : \textit{« Comment la répartition de la charge du skieur le long du ski
+influence-t-elle la courbure et la zone de flexion maximale ? »}
+
+\newpage
 
 \section{Contexte}
 
@@ -151,7 +174,6 @@ Ainsi, pour la suite de cette étude et afin de simplifier l’analyse, les hypo
 \vspace{1em}
 Ces hypothèses permettent d’isoler les mécanismes dominants de la flexion et de limiter la complexité du modèle.
 
-\newpage
 \section{Modélisation 1D}
 
 \subsection{Etude Analytique}
@@ -199,7 +221,6 @@ où :
 
 Dans le cadre de la théorie d’Euler--Bernoulli \cite{site5}, la relation fondamentale reliant la déformée de la poutre au moment fléchissant interne s’écrit :
 \begin{equation}
-\label{eq:5}
 EI\,y^{(2)}(x) = M(x)
 \end{equation}
 où :
@@ -233,8 +254,9 @@ EI\,y^{(4)}(x) = -q(x)
 \end{equation}
 
 \subsubsection{Formulation analytique du problème}
+\label{sec:analytique}
 
-Bien que l’introduction de la dérivée quatrième conduise à une équation différentielle d’ordre plus élevé, nécessitant en théorie quatre conditions aux limites, cette formulation se révèle plus adaptée dans le cadre de ce TER. En effet, la charge répartie étant décrite par des fonctions gaussiennes, l’écriture directe de l’équation permet de traiter analytiquement et numériquement la répartition des efforts sans avoir à intégrer explicitement la charge, ce qui simplifie la suite de l’analyse.
+Bien que l’introduction de la dérivée quatrième conduise à une équation différentielle d’ordre plus élevé, nécessitant en théorie quatre conditions aux limites, cette formulation se révèle plus adaptée dans le cadre de ce TER. En effet, la charge répartie étant décrite par des fonctions gaussiennes, l’écriture directe de l’équation permet de traiter analytiquement et numériquement la répartition des efforts sans avoir à intégrer explicitement la charge, ce qui simplifie ainsi la suite de l’analyse. 
 
 \vspace{1em}Dans le cadre de la théorie d’Euler--Bernoulli, la flèche est nulle au niveau des appuis simples, et aucun moment fléchissant n’y est transmis. Cela permet ainsi d'obtenir les conditions aux limites associées  :
 \[
@@ -250,28 +272,169 @@ y^{(2)}(L) = 0
 \begin{equation}
     EI\,y^{(4)}(x) = -w_1 \exp\!\left(-\frac{(x-\mu_1)^2}{2\sigma^2}\right)
  - w_2 \exp\!\left(-\frac{(x-\mu_2)^2}{2\sigma^2}\right)
+ \label{eq:9}
 \end{equation}
 
-\vspace{1em}Cette équation fournit une relation directe entre la charge répartie et la variation de la courbure du ski via la dérivée quatrième. Cela permet ainsi de décrire l'influence locale de la répartition de efforts sur la flexion du ski et constitue le point de départ de la résolution numérique présentée dans la section suivante.
+\vspace{.5em} Afin d’exploiter cette équation, les différents paramètres intervenant dans le modèle doivent être fixés. Les valeurs du module d’Young $E$ et du moment quadratique $I$ sont choisies à partir de \cite{these1}, tandis que les paramètres \(\mu_1, \: \mu_2 \text{ et } \sigma\) ont été déterminés de manière à correspondre avec la géométrie d'une chaussure de ski. Enfin, les coefficients \(w_1 \text{ et } w_2\) considérés comme modulables permettent de représenter différentes répartitions de la charge, tout en imposant la conservation de la force totale appliquée au ski :
+
+\begin{equation}
+\int_{0}^{L}q(x)dx = F
+\end{equation}
+
+où $F$ est la force totale répartie sur le ski appliquée durant l'Etude Experimentale.
+
+\subsection{Méthode numérique}
+\subsubsection{Discrétisation du problème}
+Les équations obtenues par l’étude analytique régissent la poutre en tout point de cette dernière, ce qui correspond à une infinité de points et n’est donc pas directement exploitable numériquement. Il est donc indispensable de discrétiser le problème. On introduit pour cela un maillage uniforme de l’intervalle $[a,b]$ composé de $N$ points de discrétisation.
+
+\vspace{0.7em} Pour une fonction $y$ définie sur $[a,b]$, les points du maillage sont définis par :
+
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+x_i = a + (i-1)\,h
+\end{equation}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{equation}
+h = \frac{b-a}{N-1}
+\end{equation}
+\end{minipage}
+
+où $h$ désigne le pas de discrétisation avec $i=1, ..., N$.
+
+\vspace{0.7em} Cette discrétisation permet de remplacer les fonctions continues par leurs valeurs aux points du maillage, constituant ainsi le point de départ de la résolution numérique.
+
+\subsubsection{Construction du système linéaire}
+
+L’objectif de la méthode numérique est d’obtenir une approximation de la flèche du ski à partir des valeurs de la flèche aux points du maillage. Pour cela, l’équation différentielle \eqref{eq:9} obtenue à partir de l’étude analytique est transformée en un système linéaire reliant les valeurs discrètes de la flèche. On obtient ainsi un système de la forme :
+\begin{equation}
+A\,\mathbf{y} = \mathbf{b}
+\end{equation}
+où le vecteur $\mathbf{y}$ contient les valeurs de la flèche $y(x_i)$ aux points du maillage.
+
+\vspace{1em} La matrice $A$ et le second membre $\mathbf{b}$ sont construits à l'aide de la méthode des différences finies \cite{memoire2}. Dans le cas de l’équation de la poutre d’Euler--Bernoulli, la dérivée d’ordre quatre de la flèche est approchée, pour un point intérieur $x_i$, par le schéma centré :
+\begin{equation}
+y^{(4)}(x_i)
+\approx
+\frac{y(x_{i-2}) - 4y(x_{i-1}) + 6y(x_i) - 4y(x_{i+1}) + y(x_{i+2})}{h^4}
+\end{equation}
+Cette approximation, dont le calcul est réalisé en Annexe~\ref{annexe:A}, conduit à une matrice $A$ à structure bande, où chaque équation ne fait intervenir que les points voisins du maillage. De plus, Les conditions aux limites définies dans la section~\ref{sec:analytique} sont intégrées par une modification des premières et dernières équations du système.
+
+Le second membre $\mathbf{b}$ correspond au chargement réparti appliqué au ski, évalué aux points du maillage. Les formes des matrices A et B sont présentées en Annexe~\ref{annexe:B}. 
+
+\subsubsection{Résolution numérique}
+
+La résolution numérique a été réalisée à l’aide du langage \textsc{Fortran 90} et de la bibliothèque \textsc{LAPACK}, qui permet de résoudre des systèmes linéaires à l’aide d’une décomposition LU. Cette méthode n’est pas optimisée en termes de temps de calcul, mais elle reste largement suffisante dans le cadre du système étudié.
+
+Les résultats obtenus ont ensuite été exploités à l’aide de \textsc{Gnuplot} afin de représenter la flèche du ski de longueur $1{,}22\,\mathrm{m}$. La déformée numérique obtenue est présentée en Figure~\ref{fig:resol_num}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{charge_rep_num.png}
+    \caption{Représentation de la flèche du ski dans son plan longitudinal}
+    \label{fig:resol_num}
+\end{figure}
+
+L’erreur relative en fonction du pas de discrétisation $h$ a pu être calculée en considérant la courbe numérique comme solution exacte avec un pas de discrétisation suffisamment petit afin d'obtenir $5 000$ points. Le graphe ainsi que le tableau présentés en Annexe~\ref{annexe:C} mettent en évidence une évolution linéaire. On remarque que lorsque le pas de discrétisation est divisé par un facteur $10$, l’erreur est divisée par un facteur proche de $10$, ce qui indique une convergence d’ordre 1 du schéma de différences finies utilisé.
+
+\subsection{Etude expérimentale}
+\subsubsection{Présentation du dispositif expérimental}
+
+Afin de confronter les résultats du modèle numérique présenté précédemment, une étude expérimentale de la flexion statique d’un ski est réalisée. Le protocole repose sur une analyse par vidéométrie effectuée à partir de deux clichés : un premier du ski au repos, permettant d'identifier son cambre naturel, et un second du ski simplement appuyé à ses extrémités et sollicité par une charge centrée de $16,0 \pm 0,50$~kg au niveau du patin. La charge correspond à une force appliquée de $157 \pm 5$~N mesurée à l'aide d'un dynamomètre durant l'expérience.
+
+\vspace{.4em} Le traitement des images a été réalisé à l'aide du logiciel \textsc{Tracker}. La phase de calibration a consisté à ajuster l'échelle sur la longueur réelle du ski et à définir un repère cartésien dont l'origine est fixée à l'extrémité de la spatule. Un pointage discret de 26 coordonnées le long de la fibre supérieure a permis de reconstruire numériquement le profil de la déformée.
+
+\subsubsection{Mesures et résultats}
+
+Les données de position longitudinales $x$ et de déformation verticale $y$ présentées en Annexe~\ref{annexe:D} ont été extraites pour les deux configurations étudiées à partir du traitement des images.
+
+Lorsque le ski est au repos, celui-ci présente un cambre positif initial, avec une flèche comprise entre $2{,}4 \pm 1,0$ et $6{,}6 \pm 1,0$~mm. 
+Sous l'application de la charge appliquée, la déformée s'inverse et atteint une flèche négative maximale de $-22,2 \pm 1,0$ mm, localisée à $x \approx 0,456 \pm 0,001$~m. La Figure \ref{fig:courbe_flexion} présente la superposition des profils expérimentaux obtenus, mettant en évidence la transition nette entre la forme bombée naturelle du ski et la cuvette de flexion provoquée par la charge, après traitement sous \textsc{Python}. 
+
+\vspace{.5em} On observe également que les extrémités du ski restent proches du niveau zéro, validant ainsi l'hypothèse des appuis simples mentionnés dans la modélisation analytique.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.68\textwidth]{flèche_exp.png} 
+    \caption{Comparaison des profils expérimentaux de déformation entre le ski au repos et ski sous charge de 16 kg}
+    \label{fig:courbe_flexion}
+\end{figure}
+
+L’incertitude associée aux mesures de flèche provient principalement du pointage des images sous le logiciel \textsc{Tracker}. Compte tenu de la résolution des clichés et de la calibration effectuée, l’incertitude sur la flèche est estimée à environ $\pm 1,0$~mm.
+
+\subsection{Discussion}
+
+La comparaison des résultats numériques et expérimentaux présentée sur la Figure~\ref{fig:courbe_flexion} met en évidence une cohérence visuelle globale concernant l’influence de la répartition de la charge du skieur sur la déformation du ski, tant sur la courbure que sur la position de la zone de flexion maximale.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.8\textwidth]{courbe_f_rep_finale.png} 
+    \caption{Comparaison entre les flèches obtenues numériquement et expérimentalement dans son plan longitudinal}
+    \label{fig:courbe_flexion}
+\end{figure}
+
+Cependant, la cohérence visuelle globale ne suffit pas pour conclure à une cohérence quantitative de la solution. La flèche maximale obtenue numériquement est de $-3{,}83 . 10^{-2}$~m, tandis que la mesure expérimentale conduit à une valeur de $-22{,}2 \pm 1{,}0$~mm. L’écart absolu est ainsi de $16{,}1$~mm, soit un écart relatif de $72{,}5\pm 0{,}5\%$ par rapport à la valeur expérimentale. L'écart obtenu est en réalité quantitativement important. \vspace{1em}
+
+La modélisation analytique est basée sur l’assimilation du ski à une poutre unidimensionnelle soumise à une charge répartie et permet de comprendre les mécanismes de la flexion du ski. Cependant, cette approche repose sur des hypothèses simplificatrices, telles que l’homogénéité du matériau, la linéarité du comportement mécanique, l'absence de fixation \cite{site4} ou encore le choix d'un module d'Young $E$ provenant d'une donnée tabulée, qui limite la précision quantitative des résultats.\vspace{1em}
+
+D'autres phénomènes n'ayant pas été pris en compte dans les modèles tels que les conditions de contact avec les appuis ou encore les incertitudes liées à la vidéométrie, peuvent expliquer cet écart relatif important.\vspace{1em}
+
+Enfin, la résolution numérique par différences finies apporte une description plus détaillée de la courbure du ski par rapport à l'approche analytique, ce qui permet de traiter directement l'équation différentielle associée à la charge, tout en conservant un coût de calcul raisonnable.  Les écarts observés entre la solution de référence numérique et la solution numérique s’expliquent par la discrétisation du modèle, comme le montre l'étude de convergence du schéma.\vspace{1em}
+
+
+Ainsi, ce travail montre que des modèles mécaniques simplifiés permettent de décrire de manière pertinente les tendances globales du comportement en flexion d’un ski et d’analyser l’influence de la répartition de la charge du skieur, notamment en termes de forme de la déformée et de localisation de la flexion maximale. Les écarts quantitatifs observés sur l’amplitude de la flèche mettent toutefois en évidence les limites de ces modèles et ouvrent des perspectives d’amélioration vers des approches plus réalistes.
+
+
+\section{Conclusion générale}
+Ce travail a permis d’étudier l’influence de la répartition de la charge exercée par le skieur sur la déformation du ski, en particulier sur sa courbure et la position de la zone de flexion maximale. À travers une approche combinant modélisation analytique, résolution numérique et observations expérimentales, il a été possible de mettre en évidence le lien entre la position du skieur et le comportement mécanique global du ski.\vspace{1em}
+
+L’étude analytique a fourni des relations fondamentales permettant de prédire la courbure du ski en fonction de la charge appliquée. De plus, la méthode numérique a permis de résoudre le problème pour des répartitions de charge plus complexes et d'obtenir une description détaillée de la déformée du ski. 
+
+Enfin, les observations expérimentales ont mis en évidence les tendances que les modèles avaient prédit, notamment en ce qui concerne la forme de la déformée et la localisation de la flexion maximale. Elles ont toutefois souligné les limites quantitatives du modèle, liées aux hypothèses simplificatrices ainsi qu'aux conditions réelles de flexion du ski.\vspace{1em}
+
+Ces résultats apportent une meilleure compréhension de la dynamique du ski et offrent des possibilités pour l’optimisation de la conception du matériel. Des perspectives d’amélioration telles que le choix du modèle analytique, l’intégration de la flexion en deux dimensions ou l’étude de différents types de skis permettraient de mieux représenter les comportements réels du système étudié.\vspace{1em}
+
+\begin{thebibliography}{99}
+
+\bibitem{Ostadabbas2012}
+M.D, NOURANI, M., OSTADABBAS, S., POMPEO, M., (2012), \textit{Continuous Plantar Pressure Modeling Using Sparse
+Sensors}, Proceedings of BIBE 2012
+\url{https://ecs.utdallas.edu/research/researchlabs/QoLT/files/pdfs/BIBE12\_Continuous.pdf}
+
+\bibitem{site5}
+EGC (2025).
+\textit{Théorie des poutres}.\\
+\url{https://www.etudiantgeniecivil.com/theorie-des-poutres/}
+
+\bibitem{these1}
+CLERC, C. (1986).
+\textit{Modélisation de poutres composites : application aux skis}.
+Institut National des Sciences Appliquées de Lyon.\\
+\url{https://theses.insa-lyon.fr/publication/1986ISAL0006/these.pdf}
+
+\bibitem{memoire2}
+MIMOUNA, R. (2017).
+\textit{Application de la méthode des différences finies au calcul de poutres en flexion}.
+Université Ibn Khaldoun de Tiaret.\\
+\url{http://dspace.univ-tiaret.dz/bitstream/123456789/2623/1/TH.M.GC.FR.2017.21.pdf}
+
+\bibitem{site4}
+GLISSATTITUDE.
+\textit{Les fixations de ski}.\\
+\url{https://www.glissattitude.com/blog/ski-alpin-et-racing-11/les-fixations-de-ski-2767}
+
+\end{thebibliography}
 
 \newpage
 
+{\clearpage}
+\section*{Annexes}
+\addcontentsline{toc}{section}{Annexes}
 
-\subsection{Méthode numérique}
-L’objectif de cette partie est de modéliser la flexion du ski à l’aide d’outils numériques, afin de relier les équations théoriques de la poutre à des solutions approchées calculables.  
-Pour cela, nous utiliserons la \textbf{méthode des différences finies}, qui permet de discrétiser les équations différentielles régissant la flexion et d’obtenir un système linéaire reliant les grandeurs mécaniques du ski. 
-\subsubsection{Discrétisation du problème}
-Les équations obtenues par l'étude analytique régissent la poutre en tout point de cette dernière. Cela constitue donc une infinité de points, ce qui n'est pas appréhendable par une machine. Il est donc indispensable de discrétiser notre problème pour le résoudre numériquemnet. Pour cela on choisi une subdivison contenant un nombre fini $N$ de points de discrétisations :
-
-\vspace{1em}
-
-Pour une fonction $y(x)$ définie sur un intervalle $[a,b]$.
-\[
-x_1 = a,\quad x_2 = a + h,\quad x_3 = a + 2h,\quad \dots,\quad x_N = b,
-\]
-où $h = \dfrac{b - a}{N-1}$ est le pas du maillage.
-
-\subsubsection{Schéma des différences finies}
+\appendix
+\section{Méthode des différences finies}
+\label{annexe:A}
 La méthode des différences finies est une méthode numérique permettant d'approcher
 les solutions d'équations différentielles à l'aide d'équations algébriques.
 L'idée principale est de remplacer les dérivées par des différences
@@ -279,7 +442,7 @@ calculées à partir de valeurs de la fonction sur un ensemble discret de points
 
 \vspace{1em}
 
-Pour ce faire on utilise le developpement de Taylor. En regardant en $x_i$, pour un pas $h$, on obtient :
+Pour ce faire on utilise le développement de Taylor. En regardant en $x_i$, pour un pas $h$, on obtient :
 \[
 y(x_i + h)
   = y(x_i)
@@ -307,25 +470,43 @@ y^{(k)}(x_i)
 \]
 où les coefficients $\alpha_j$ sont déterminés en identifiant les termes du développement de Taylor.
 
-\vspace{1em}On peut donc exprimé \(y^{(k)}(x_i)\) en fonction de \(y\) évalué en \(x_i\) et en ses voisins immédiat. Cela va permettre de reformuler notre problème en la résolution d'un système linéaire.
+\vspace{1em}
 
-\subsubsection{Construction du système linéaire}
-
-La méthode des différences finies permet de transformer une résolution d'équation différentiel en une résolution de système linéaire sous la forme matricielle suivante :
-\[
-A\,\mathbf{y} = \mathbf{b}
-\]
-où :
-\begin{itemize}
-  \item $A$ est la matrice des coefficients reliant chaque valeur discrète $y_i$ à ses voisins ;
-  \item $\mathbf{y} = (y(x_1), y(x_2), \dots, y(x_N))^{\mathsf{T}}$ est le vecteur des inconnues représentant les flèches discrétisées ;
-  \item $\mathbf{b}$ est le vecteur second membre, contenant les termes imposés par les conditions aux limites.
-\end{itemize}
+En voici quelques exemples qui ont été utiles pour notre cas d'étude :
 
 \vspace{1em}
 
-Dans notre cas c'est la relation \eqref{eq:8} qu'il faut reformuler sous cette forme. Le système linéaire correspondant est alors caractérisé par :
+Dérivée première (schéma avant d’ordre 2)
+\[
+y^{(1)}(x_i) \approx \frac{y(x_{i+1}) - y(x_{i})}{h}
+\]
 
+Dérivée seconde (schéma centré d’ordre 2)
+\[
+y^{(2)}(x_i) 
+\approx 
+\frac{y(x_{i+1}) - 2y(x_i) + y(x_{i-1})}{h^2}
+\]
+
+Dérivée d’ordre 4 (schéma centré d’ordre 2)
+\[
+y^{(4)}(x_i)
+\approx
+\frac{y(x_{i-2}) - 4y(x_{i-1}) + 6y(x_i) - 4y(x_{i+1}) + y(x_{i+2})}{h^4}
+\]
+
+\vspace{1em}On peut donc exprimer \(y^{(k)}(x_i)\) en fonction de \(y\) évalué en \(x_i\) et en ses voisins immédiat. Ce qui permet de reformuler le problème de résolution d'une équation différentielle en la résolution d'un système linéaire.
+
+\newpage
+
+\section{Ecriture des matrices A et \mathbf{b} du système linéaire}
+\label{annexe:B}
+
+À partir de l’équation différentielle d’ordre quatre établie en section~\ref{sec:analytique}, la discrétisation sur un maillage uniforme conduit à un système linéaire de la forme :
+\[
+A\,\mathbf{y} = \mathbf{b}
+\]
+A l'aide de la méthode des différences finies, les équations différentielles régissant la flexion permettent d'obtenir les matrices A et \mathbf{b} du système linéaire : 
 \[
 A =
 \begin{pmatrix}
@@ -345,112 +526,81 @@ A =
 \]
 
 \vspace{1em}
-où les deux premières et deux dernières lignes permettent de fixer les conditions limites formulées en partie 4.1.3. Les autres coefficients sont issues de la formule des différences finies pour la dérivée d'ordre 4 :
+Les deux premières et les deux dernières lignes de la matrice $A$ correspondent à l’imposition des conditions aux limites. Les lignes internes sont issues de l’approximation par différences finies centrées de la dérivée d’ordre quatre de la flèche.
 
-\[
-y^{(4)}(x_i)
-\approx
-\frac{y(x_{i-2}) - 4y(x_{i-1}) + 6y(x_i) - 4y(x_{i+1}) + y(x_{i+2})}{h^4}.
-\]
+\newpage
+\section{Erreur Relative}
+\label{annexe:C}
 
-%\[
-%A=
-%\begin{pmatrix}
-%1 & 0 & 0 & \cdots & 0\\
-%1 & -2 & 1 & \cdots & 0\\
-%0 & \ddots & \ddots & \ddots & 0\\
-%0 & \cdots & 1 & -2 & 1\\
-%0 & \cdots & 0 & 0 & 1
-%\end{pmatrix}
-%\qquad \text{et} \qquad
-%\mathbf{b} =
-%\begin{pmatrix}
-%0 \\ \,\dfrac{M(x_2)\,h^2}{EI} \\ \vdots \\ \,\dfrac{M(x_{N-1})\,h^2}{EI} \\ 0
-%\end{pmatrix}
-%\]
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{erreur_relative_f_rep.png}
+    \caption{Erreur relative en fonction du pas de discrétisation}
+    \label{fig:erreur}
+\end{figure}
 
-
-\subsubsection{Résolution numérique}
-Il existe plusieurs méthodes pour résoudre des systèmes linéaires. Cependant pour calculer \textbf{y} on s'est simplement appuyé sur la relation :
-\[
-\mathbf{y} = A^{-1}\mathbf{b}
-\]
-Nous avons alors choisi de tester deux méthodes directs permettant d'inverser la matrice A :
-\begin{itemize}
-  \item la méthode du pivot de Gauss
-  \item l'utilisation de la bibliothèque Fortran \textbf{Lapack} qui permet entre autres d'inverser une matrice en se basant sur sa décomposition LU.
-\end{itemize}
-Il faut noter que cette manière de procécer n'est pas la plus efficace, mais est suffisante pour notre cas de figure.
-
-\vspace{1em}
-
-On obtient finalement \textbf{y} en faisant la multiplication matricielle entre \(A^{-1}\) et \textbf{b}.
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+Pas de discrétisation $h$ & Erreur relative \varepsilon_{\text{rel}} \\
+\hline
+$4,09 . 10^{-1}$ & $3,30 . 10^{-2}$ \\ \hline
+$1,75 . 10^{-1}$ & $1,60 . 10^{-2}$ \\ \hline
+ $8,17 . 10^{-2}$ & $8,02 . 10^{-3}$ \\ \hline
+ $3,95 . 10^{-2}$ & $3,95 . 10^{-3}$ \\ \hline
+ $1,95 . 10^{-2}$ & $1,95 . 10^{-3}$ \\ \hline
+ $9,65 . 10^{-3}$ & $9,60 . 10^{-4}$ \\ \hline
+ $4,81 . 10^{-3}$ & $4,68 . 10^{-4}$ \\ \hline
+ $2,40 . 10^{-3}$ & $2,23 . 10^{-4}$ \\ \hline
+ $1,20 . 10^{-3}$ & $1,02 . 10^{-4}$ \\ \hline
+\end{tabular}
+\caption{Erreur relative en fonction du pas de discrétisation}
+\label{tab:erreur_pas_2}
+\end{table}
 
 
 \newpage
 
+\section{Données expérimentales de position horizontale et déformation verticale du ski}
+\label{annexe:D}
 
-\subsection{Etude expérimentale}
-\subsubsection{Présentation du dispositif expérimental}
-\subsubsection{Mesures et résultats}
-\subsubsection{Analyse des résultats expérimentaux}
-
-\newpage
-
-
-\subsection{Discussion}
-\subsubsection{Résumé des résultats}
-\subsubsection{Limites du modèle et perspectives d'amélioration}
-\section{Conclusion générale}
-
-\newpage
-
-
-\begin{thebibliography}{99}
-
-\bibitem{Ostadabbas2012}
-M.D, NOURANI, M., OSTADABBAS, S., POMPEO, M., (2012), \textit{Continuous Plantar Pressure Modeling Using Sparse
-Sensors}, Proceedings of BIBE 2012
-\url{https://ecs.utdallas.edu/research/researchlabs/QoLT/files/pdfs/BIBE12\_Continuous.pdf}
-
-\bibitem{site1}
-BULOTA, M. (2021).
-Sooth Ski. \textit{Ski : Longueur + sidecut + rayon + rockers + flexion + torsion =compliqué}.\\
-\url{https://soothski.com/proprietes-skis-expliquees/2021/ski-longueur-sidecut-rayon-rockers-flexion-torsion-complique/?lang=fr}
-
-\bibitem{these1}
-CLERC, C. (1986).
-\textit{Modélisation de poutres composites : application aux skis}.
-Institut National des Sciences Appliquées de Lyon.\\
-\url{https://theses.insa-lyon.fr/publication/1986ISAL0006/these.pdf}
-
-\bibitem{site5}
-EGC (2025).
-\textit{Théorie des poutres}.\\
-\url{https://www.etudiantgeniecivil.com/theorie-des-poutres/}
-
-\bibitem{these2}
-FALDA-BUSCAIOT, T. (2017).
-\textit{Analyse biomécanique en ski alpin : conception et validation d’un nouveau capteur d’efforts 3D à l’interface skieur--environnement}.
-Université Grenoble Alpes.\\
-\url{https://www.researchgate.net/publication/325450528}
-
-\bibitem{site2}
-GLISSATTITUDE.
-\textit{Souplesse et rigidité des skis}.\\
-\url{https://www.glissattitude.com/blog/ski-alpin-et-racing-11/souplesse-et-rigidite-des-skis-4737}
-
-\bibitem{site4}
-GLISSATTITUDE.
-\textit{Les fixations de ski}.\\
-\url{https://www.glissattitude.com/blog/ski-alpin-et-racing-11/les-fixations-de-ski-2767}
-
-\bibitem{memoire2}
-MIMOUNA, R. (2017).
-\textit{Application de la méthode des différences finies au calcul de poutres en flexion}.
-Université Ibn Khaldoun de Tiaret.\\
-\url{http://dspace.univ-tiaret.dz/bitstream/123456789/2623/1/TH.M.GC.FR.2017.21.pdf}
-
-\end{thebibliography}
+\begin{table}[h!]
+\centering
+\small
+\begin{tabular}{|c|c||c|c|}
+\hline
+\multicolumn{2}{|c||}{\textbf{Ski au repos (Cambre)}} & \multicolumn{2}{c|}{\textbf{Ski sous charge (16 kg)}} \\ \hline
+\textbf{Position $x$ (m)} & \textbf{Déflexion $y$ (m)} & \textbf{Position $x$ (m)} & \textbf{Déflexion $y$ (m)} \\ \hline
+-0,0002 & 0,0024 & 0,0003 & 0,0004 \\ \hline
+0,0412 & 0,0035 & 0,0462 & -0,0026 \\ \hline
+0,0938 & 0,0028 & 0,1030 & -0,0067 \\ \hline
+0,1440 & 0,0036 & 0,1570 & -0,0101 \\ \hline
+0,1940 & 0,0044 & 0,1980 & -0,0108 \\ \hline
+0,2460 & 0,0052 & 0,2500 & -0,0121 \\ \hline
+0,2950 & 0,0062 & 0,3010 & -0,0149 \\ \hline
+0,3470 & 0,0059 & 0,3530 & -0,0172 \\ \hline
+0,3970 & 0,0059 & 0,4030 & -0,0193 \\ \hline
+0,4480 & 0,0063 & 0,4560 & -0,0222 \\ \hline
+0,4980 & 0,0066 & 0,5050 & -0,0216 \\ \hline
+0,5470 & 0,0059 & 0,5570 & -0,0218 \\ \hline
+0,5970 & 0,0059 & 0,6050 & -0,0214 \\ \hline
+0,6470 & 0,0058 & 0,6550 & -0,0214 \\ \hline
+0,6970 & 0,0060 & 0,7050 & -0,0203 \\ \hline
+0,7470 & 0,0054 & 0,7540 & -0,0199 \\ \hline
+0,7980 & 0,0046 & 0,8050 & -0,0191 \\ \hline
+0,8480 & 0,0051 & 0,8540 & -0,0176 \\ \hline
+0,8980 & 0,0036 & 0,9040 & -0,0154 \\ \hline
+0,9490 & 0,0042 & 0,9540 & -0,0133 \\ \hline
+1,0000 & 0,0050 & 1,0040 & -0,0109 \\ \hline
+1,0565 & 0,0053 & 1,0550 & -0,0077 \\ \hline
+1,1130 & 0,0056 & 1,1040 & -0,0027 \\ \hline
+1,1695 & 0,0059 & 1,1570 & 0,0013 \\ \hline
+1,2100 & 0,0062 & 1,2100 & 0,0051 \\ \hline
+1,2260 & 0,0070 & 1,2260 & 0,0065 \\ \hline
+\end{tabular}
+\caption{Valeurs des profils de déformée mesurées sur le logiciel Tracker}
+\end{table}
 
 \end{document}
+
