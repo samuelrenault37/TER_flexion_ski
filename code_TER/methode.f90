@@ -1,6 +1,7 @@
 module meth
     use const
     use fonct
+    use LU
     implicit none
     
     contains
@@ -89,6 +90,43 @@ module meth
         x = MATMUL(A, b)
 
     end subroutine meth_lapack
+
+
+    subroutine meth_lapack_v2(A, b, N, x)
+        integer, intent(in) :: N
+        real(PR), dimension(N,N), intent(in) :: A
+        real(PR), dimension(N), intent(in) :: b
+        real(PR), dimension(N), intent(out) :: x
+        integer, dimension(N) :: ipiv
+        integer :: info
+        real(PR), dimension(N,N) :: M
+
+        M = A ! M contient la decomposition LU de A à la fin de l'appel
+        x = b ! x contient la solution du syst linéaie à la fin de l'appel
+
+        call dgesv(N, 1, M, N, ipiv, x, N, info)
+
+        if (info /= 0) then
+            print *, "Erreur, info =", info
+        end if
+
+    end subroutine meth_lapack_v2
+
+
+    subroutine meth_LU_home_made(A, b, N, x)
+        integer, intent(in) :: N
+        real(PR), dimension(N,N), intent(in) :: A
+        real(PR), dimension(N), intent(in) :: b
+        real(PR), dimension(N), intent(out) :: x
+        real(PR), dimension(N,N) :: M
+        logical :: bool
+
+        call lu_decomposition(A, M, bool)
+        if(.NOT.(bool)) then
+            stop
+        end if
+        call lu_res(M, b, x, bool)
+    end subroutine meth_LU_home_made
 
 
     subroutine meth_grad_conj(A_val, A_col, A_row, b, N, NN, x)

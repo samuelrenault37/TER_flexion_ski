@@ -12,7 +12,7 @@ program main
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
-    N = 100
+    N = 7000
 
     h = (borne_b-borne_a)/(N-1)
 
@@ -31,12 +31,14 @@ program main
     call convert_A_CSR(A, A_val, A_col, A_row, N, NN)
 
     !call meth_piv(A, b, N, x)
-    call meth_lapack(A, b, N, x)
+    !call meth_lapack(A, b, N, x)
+    call meth_lapack_v2(A, b, N, x)
+    !call meth_LU_home_made(A, b, N, x)
     !call meth_grad_conj(A_val, A_col, A_row, b, N, NN, x)
     
     call write_in_file("../doc/res_solv.dat", x, N, h, borne_a)
 
-    call write_exp_val()
+    !call write_exp_val()
 
     ! correspondance des methodes avec des numéros pour utilisé correctement print_err
     ! meth_piv -> 1
@@ -47,7 +49,7 @@ program main
     ! solution analytique connu (à definir dans la fonction prévu) -> 1
     ! solution exact approchée avec un grand pas de discrétisation -> 2
 
-    call print_err(2, "../doc/erreur.dat", 2)  ! <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
+    ! call print_err(2, "../doc/erreur.dat", 2)  ! <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
     ! et un seul appel est suffisant pour le moment
      
     ! call print_sol(borne_a, borne_b, N_sol)
