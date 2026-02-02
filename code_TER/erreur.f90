@@ -53,6 +53,10 @@ module err
                     call meth_lapack (A, b, N, x)
                 case(3)
                     call recup_NN(A, N, NN)
+                case(4)
+                    call meth_lapack_v2(A, b, N, x)
+                case(5)
+                    call meth_LU_home_made(A, b, N, x)
 
                     allocate(A_val(NN))
                     allocate(A_col(NN))
@@ -117,6 +121,10 @@ module err
                     call meth_lapack (A, b, N, x)
                 case(3)
                     call recup_NN(A, N, NN)
+                case(4)
+                    call meth_lapack_v2(A, b, N, x)
+                case(5)
+                    call meth_LU_home_made(A, b, N, x)
 
                     allocate(A_val(NN))
                     allocate(A_col(NN))

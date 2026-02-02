@@ -12,7 +12,7 @@ program main
     real(PR), dimension(:,:), allocatable :: A
     integer, dimension(:), allocatable :: A_col, A_row
 
-    N = 7000
+    N = 500
 
     h = (borne_b-borne_a)/(N-1)
 
@@ -40,16 +40,18 @@ program main
 
     !call write_exp_val()
 
-    ! correspondance des methodes avec des numéros pour utilisé correctement print_err
+    ! correspondance des methodes avec des numéros pour utilisé correctement print_err (premier argument)
     ! meth_piv -> 1
     ! meth_lapack -> 2
     ! meth_grad_conj -> 3
+    ! meth_lapack_v2 -> 4
+    ! meth_LU_home_made -> 5
 
-    ! correspondance des cas de solutions avec des numéros pour utilisé correctement print_err
+    ! correspondance des cas de solutions avec des numéros pour utilisé correctement print_err (dernier argument)
     ! solution analytique connu (à definir dans la fonction prévu) -> 1
     ! solution exact approchée avec un grand pas de discrétisation -> 2
 
-    ! call print_err(2, "../doc/erreur.dat", 2)  ! <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
+    ! call print_err(4, "../doc/erreur.dat", 2)  ! <- relativement long à calculé avec les 2 premières méthodes (dizaine de sec)
     ! et un seul appel est suffisant pour le moment
      
     ! call print_sol(borne_a, borne_b, N_sol)

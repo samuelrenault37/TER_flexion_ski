@@ -7,6 +7,7 @@ module const
     real(PR), parameter :: I = 1.44d-8 ! en m**4
     real(PR), parameter :: borne_a = 0, borne_b = 1.226_PR ! en m
     integer, parameter :: N_sol = 1000 !pas de discretisation pour tracer la solution analytique (pas de raison de la modifier)
+    ! indication pour cas_init :
     ! 1 -> resolution avec dérivée seconde
     ! 2 -> avec dérivée quatrième
     ! 3 -> fléxion 3pts

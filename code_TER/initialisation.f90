@@ -59,13 +59,15 @@ contains
                 A(N, N) = 1
                 
                 ! Condition sur les moments aux extrémitées
-                A(2,1) = 1
-                A(2,2) = -2
-                A(2,3) = 1
+                A(2,1) = -4
+                A(2,2) = 5
+                A(2,3) = -4
+                A(2,4) = 1
 
-                A(N-1, N-2) = 1
-                A(N-1, N-1) = -2
-                A(N-1, N) = 1
+                A(N-1, N-3) = 1
+                A(N-1, N-2) = -4
+                A(N-1, N-1) = 5
+                A(N-1, N) = -4
 
                 do k = 3, N-2
             
@@ -89,8 +91,8 @@ contains
                 b(N) = 0
 
                 ! Condition sur les moments aux extrémitées
-                b(2) = h**2*0
-                b(N-1) = h**2*0
+                b(2) = -h**4*f_rep(h)/(E*I)
+                b(N-1) = -h**4*f_rep((N-2)*h)/(E*I)
 
             case(3)
                 ! Condition pour la première ligne 
