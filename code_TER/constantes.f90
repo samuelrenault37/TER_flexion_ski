@@ -11,5 +11,5 @@ module const
     ! 1 -> resolution avec dérivée seconde
     ! 2 -> avec dérivée quatrième
     ! 3 -> fléxion 3pts
-    integer, parameter :: cas_init = 2
+    integer, parameter :: cas_init = 1
 end module const

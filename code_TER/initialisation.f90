@@ -11,7 +11,7 @@ contains
         real(PR), dimension(N,N), intent(out) :: A
         real(PR), dimension(N), intent(out) :: b
         integer :: k
-        real(PR) :: Mx, x, I_fs, I_sfs, L
+        real(PR) :: Mx, x, I_fs, I_sfs, L, Mx_max, sx_max
 
         L = (borne_b - borne_a)
 
@@ -28,6 +28,10 @@ contains
                 !Les intégrales sur f sont calculée directement à partir de la discrétisation faite pour la méthode des différences finies
                 I_fs = 0
                 I_sfs = 0
+
+                Mx_max = 0
+                sx_max = -1
+
                 ! A
                 do k = 2, N-1
             
@@ -42,12 +46,19 @@ contains
                     I_sfs = I_sfs + (x-(h/2))*f_rep(x-(h/2))*h
 
                     Mx = 0.5_PR*F*x - x*(I_fs) + I_sfs
-                    
+
+                    if (Mx > Mx_max) then
+                        Mx_max = Mx
+                        sx_max = x
+                    end if
+
                     b(k) = (h**2*Mx/(E*I))
                     
                 end do
 
                 !print *, I_fs ! pour vérifier que le coefficient A est bien choisi
+                !print *, "sigma_max = ", (Mx_max/I)*0.005, "atteint en x =", sx_max
+                !on obtient : sigma_max =    13039066.941155676      atteint en x =  0.61422845691382766
 
                 b(1) = 0
                 b(N) = 0
