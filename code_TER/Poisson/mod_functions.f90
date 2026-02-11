@@ -30,4 +30,28 @@ module functions
 
     end function sol_exacte
 
+    ! ----------------
+
+    function f_2D(x, y) result(result)
+
+        real(PR), intent(in) :: x
+        real(PR), intent(in) :: y
+        real(PR)             :: result
+
+        result = 2*PI**2*SIN(PI*x)*SIN(PI*y)
+
+    end function f_2D 
+
+    ! ----------------
+
+    function sol_exacte_2D(x, y) result(result)
+
+        real(PR), intent(in) :: x
+        real(PR), intent(in) :: y
+        real(PR)             :: result
+
+        result = SIN(PI*x)*SIN(PI*y)
+
+    end function sol_exacte_2D
+
 end module functions
