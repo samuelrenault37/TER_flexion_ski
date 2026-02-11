@@ -307,6 +307,8 @@ module algebre
 
     end subroutine lu_res 
 
+    !--------------------------
+
     subroutine construction_matrice(degre_approx, nb_pts, schema, nb_total_pts, delta_x, A)
 
         integer, intent(in)                                 :: degre_approx
@@ -337,7 +339,6 @@ module algebre
                     A = 0._PR
 
                     ! CL
-
                     A(1,1) = -2._PR
                     A(1,2) =  1._PR
 
@@ -345,7 +346,6 @@ module algebre
                     A(nb_total_pts, nb_total_pts - 1) =  1._PR
 
                     ! Coeur de la matrice
-
                     do i = 2, nb_total_pts-1
                             A(i, i-1) =  1._PR 
                             A(i, i)   = -2._PR
@@ -361,5 +361,79 @@ module algebre
         end select
 
     end subroutine construction_matrice
+
+    !--------------------------
+
+    subroutine construction_matrice_2D(degre_approx, nb_pts, schema, Nx, Ny, delta_x, A)
+
+        integer, intent(in)                                 :: degre_approx
+        integer, intent(in)                                 :: nb_pts
+        integer, intent(in)                                 :: Nx
+        integer, intent(in)                                 :: Ny
+        integer, intent(in)                                 :: schema
+        real(PR), intent(in)                                :: delta_x
+        real(PR), dimension(:,:), intent(out)  :: A
+
+        integer :: i, j, k, N
+
+        N = Nx*Ny
+
+        if ((size(A,1) /= N .OR. size(A,2) /= N)) then
+            return
+        end if
+
+        select case(degre_approx)
+
+        case(1)
+
+            select case(nb_pts)
+
+            case(5)
+
+                select case(schema)
+
+                case(1)
+
+                    A = 0._PR
+
+                    do j = 1, Ny
+                        do i = 1, Nx
+
+                            k = i + (j-1)*Nx 
+
+                            ! Points intérieurs
+                            if (i >= 2 .AND. i <= Nx-1 .AND. j >= 2 .AND. j <= Ny-1) then 
+
+                                A(k,k) =     4._PR
+                                A(k,k-1)  = -1._PR
+                                A(k,k+1)  = -1._PR
+                                A(k,k-Nx) = -1._PR
+                                A(k,k+Nx) = -1._PR
+
+                                ! Ajout de conditions aux bords si Nx et Ny sont trop petits
+                                if (i-1 == 1)  A(k,k-1)  = 0._PR
+                                if (i+1 == Nx) A(k,k+1)  = 0._PR
+                                if (j-1 == 1)  A(k,k-Nx) = 0._PR
+                                if (j+1 == Ny) A(k,k+Nx) = 0._PR
+
+                            else
+                                ! Condition de bord
+                                A(k,k) = 1._PR
+
+                            end if
+
+                        end do 
+                    end do
+
+                    A = (1._PR/(delta_x**2))*A
+
+                end select
+
+            end select
+
+        end select
+
+    end subroutine construction_matrice_2D
+
 
 end module algebre
