@@ -24,18 +24,20 @@ module fonct
     end subroutine matvec_csr
 
     ! écrit les valeurs utiles dans un fichier texte pour pouvoir les exploiter avec gnuplot (tracé de courbe)
-    subroutine write_in_file(file, x, N, h, a)
+    subroutine write_in_file(file, x, N, h, deric_x, deric_y)
         character(len=*), intent(in) :: file
-        real(PR), dimension(:), intent(in) ::  x
+        real(PR), dimension(:), intent(in) ::  x, deric_x, deric_y
         integer, intent(in) :: N
-        real(PR), intent(in) :: h, a
+        real(PR), intent(in) :: h
         integer :: i
 
         open(unit = 1, file = file, action = "write")
         write (1, '(A)') "#abscisse               ordonnée"
+        write (1, *) deric_x(1), deric_y(1)
         do i = 1,N
-            write (1, *) a + (i-1)*(h), x(i)
+            write (1, *) borne_a + (i)*(h), x(i)
         end do
+        write (1, *) deric_x(2), deric_y(2)
         close(1)
     end subroutine write_in_file
 
@@ -91,5 +93,20 @@ module fonct
             print *, A(i,:)
         end do
     end subroutine aff_matrice
+
+    subroutine free_syst_lin(sl)
+        type(syst_lin), intent(inout) :: sl
+        deallocate(sl%b)
+        deallocate(sl%A)
+        deallocate(sl%deric_x)
+        deallocate(sl%deric_y)
+    end subroutine free_syst_lin
+
+    subroutine free_CSR(sl)
+        type(syst_lin), intent(inout) :: sl
+        deallocate(sl%A_val)
+        deallocate(sl%A_col)
+        deallocate(sl%A_row)
+    end subroutine free_CSR
 
 end module fonct

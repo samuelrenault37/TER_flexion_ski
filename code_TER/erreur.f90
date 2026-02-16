@@ -16,9 +16,9 @@ module err
 
         ! sol analytique pour la fléxion 3pts
         if (x <= L/2) then
-            y = - (F*x*(3._PR*L*L-4._PR*x**2)/(48._PR*E*I))
+            y = - (F*x*(3._PR*L**2-4._PR*x**2)/(48._PR*E*I))
         else
-            y = - (F*(L-x)*(3._PR*L**2-4._PR*(L-x)*(L-x))/(48._PR*E*I))
+            y = - (F*(L-x)*(3._PR*L**2-4._PR*(L-x)**2)/(48._PR*E*I))
         end if
     
     end function f_sol
@@ -26,49 +26,32 @@ module err
     subroutine print_err(meth, file, cas_sol)
         character(len=*), intent(in) :: file
         integer, intent(in) :: meth, cas_sol
-        real(PR) :: h, err_max, err_cur, abs_sol, abs_num, h_sol
-        integer :: N, NN, i, k, k_sol, N_sol
-        real(PR), dimension(:), allocatable :: b, A_val, x, x_sol
-        real(PR), dimension(:,:), allocatable :: A
-        integer, dimension(:), allocatable :: A_col, A_row
+        real(PR) :: err_max, err_cur, abs_sol, abs_num, h_sol
+        integer :: i, k, k_sol, N_sol
+        real(PR), dimension(:), allocatable :: x, x_sol
+        type(syst_lin) :: sl
         
         open(unit = 1, file = file, action = "write")
 
         select case(cas_sol)
         case(1)
             do i = 2, 10
-                N = 2**i
-                h = (borne_b-borne_a)/(N-1)
+                sl%N = 2**i
+                call init_sl(sl)
 
-                allocate(b(N))
-                allocate(A(N,N))
-                allocate(x(N))
-
-                call init_A_b(A, b, h, N)
+                allocate(x(sl%N))
 
                 select case(meth)
                 case(1)
-                    call meth_piv (A, b, N, x)
+                    call meth_piv (sl, x)
                 case(2)
-                    call meth_lapack (A, b, N, x)
+                    call meth_lapack (sl, x)
                 case(3)
-                    call recup_NN(A, N, NN)
+                    call convert_A_CSR(sl)
+                    call meth_grad_conj(sl, x)
+                    call free_CSR(sl)
                 case(4)
-                    call meth_lapack_v2(A, b, N, x)
-                case(5)
-                    call meth_LU_home_made(A, b, N, x)
-
-                    allocate(A_val(NN))
-                    allocate(A_col(NN))
-                    allocate(A_row(N+1))
-
-                    call convert_A_CSR(A, A_val, A_col, A_row, N, NN)
-
-                    call meth_grad_conj(A_val, A_col, A_row, b, N, NN, x)
-
-                    deallocate(A_val)
-                    deallocate(A_col)
-                    deallocate(A_row)
+                    call meth_LU_home_made(sl, x)
                 case default
                     print *, "pas de methode correspondant à ce numéro"
                     stop
@@ -76,67 +59,48 @@ module err
 
 
                 err_max = 0
-                do k = 1, N
-                    err_cur = ABS(f_sol(borne_a + h*(k-1)) - x(k))
+                do k = 1, sl%N
+                    err_cur = ABS(f_sol(borne_a + sl%h*(k)) - x(k))
                     if (err_cur > err_max) then
                         err_max = err_cur
                     end if
                 end do
                     
-                write (1, *) h, err_max
+                write (1, *) sl%h, err_max
 
-                deallocate(b)
-                deallocate(A)
+                call free_syst_lin(sl)
                 deallocate(x)
             end do
         case(2)
             N_sol = 5000
+            h_sol = (borne_b-borne_a)/(N_sol+1)
 
-            allocate(b(N_sol))
-            allocate(A(N_sol, N_sol))
+            sl%N = N_sol
+            call init_sl(sl)
+
             allocate(x_sol(N_sol))
 
-            h_sol = (borne_b-borne_a)/(N_sol-1)
-            call init_A_b(A, b, h_sol, N_sol)
-            call meth_lapack (A, b, N_sol, x_sol)
+            call meth_lapack (sl, x_sol)
 
-            deallocate(b)
-            deallocate(A)
-
+            call free_syst_lin(sl)
 
             do i = 2, 10
-                N = 2**i
-                h = (borne_b-borne_a)/(N-1)
+                sl%N = 2**i
+                call init_sl(sl)
 
-                allocate(b(N))
-                allocate(A(N,N))
-                allocate(x(N))
-
-                call init_A_b(A, b, h, N)
+                allocate(x(sl%N))
 
                 select case(meth)
                 case(1)
-                    call meth_piv (A, b, N, x)
+                    call meth_piv (sl, x)
                 case(2)
-                    call meth_lapack (A, b, N, x)
+                    call meth_lapack (sl, x)
                 case(3)
-                    call recup_NN(A, N, NN)
+                    call convert_A_CSR(sl)
+                    call meth_grad_conj(sl, x)
+                    call free_CSR(sl)
                 case(4)
-                    call meth_lapack_v2(A, b, N, x)
-                case(5)
-                    call meth_LU_home_made(A, b, N, x)
-
-                    allocate(A_val(NN))
-                    allocate(A_col(NN))
-                    allocate(A_row(N+1))
-
-                    call convert_A_CSR(A, A_val, A_col, A_row, N, NN)
-
-                    call meth_grad_conj(A_val, A_col, A_row, b, N, NN, x)
-
-                    deallocate(A_val)
-                    deallocate(A_col)
-                    deallocate(A_row)
+                    call meth_LU_home_made(sl, x)
                 case default
                     print *, "pas de methode correspondant à ce numéro"
                     stop
@@ -144,25 +108,24 @@ module err
 
 
                 err_max = 0
-                abs_sol = borne_a
-                abs_num = borne_a
+                abs_sol = borne_a + h_sol
+                abs_num = borne_a + sl%h
                 k_sol = 1
-                do k = 1, N
+                do k = 1, sl%N
                     do while (abs_sol <= abs_num)
                         abs_sol = abs_sol + h_sol
                         k_sol = k_sol +1
                     end do
-                    abs_num = abs_num + h
+                    abs_num = abs_num + sl%h
                     err_cur = ABS(x_sol(k_sol-1) - x(k))
                     if (err_cur > err_max) then
                         err_max = err_cur
                     end if
                 end do
                     
-                write (1, *) h, err_max
+                write (1, *) sl%h, err_max
 
-                deallocate(b)
-                deallocate(A)
+                call free_syst_lin(sl)
                 deallocate(x)
             end do
 
@@ -178,20 +141,20 @@ module err
 
     end subroutine print_err
 
-    subroutine print_sol(borne_a, borne_b, N_sol)
+    subroutine print_sol(N_sol)
         integer, intent(in) :: N_sol
-        real(PR), intent(in) :: borne_a, borne_b
         real(PR), dimension(N_sol) :: x_sol
-        real(PR) :: h
+        real(PR) :: h, L
         integer :: i
 
-        h = (borne_b-borne_a)/(N_sol-1)
+        h = (borne_b-borne_a)/(N_sol+1)
+        L = borne_b-borne_a
 
         do i = 1, N_sol
-            x_sol(i) = f_sol(borne_a + h*(i-1))
+            x_sol(i) = f_sol(borne_a + h*(i))
         end do
     
-        call write_in_file("../doc/sol.dat", x_sol, N_sol, h, borne_a)
+        call write_in_file("../doc/sol.dat", x_sol, N_sol, h, (/0._PR, L/), (/0._PR, 0._PR/))
         
     end subroutine print_sol
 

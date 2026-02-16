@@ -1,6 +1,13 @@
 module const
     implicit none
     integer, parameter :: PR = 8
+    type :: syst_lin
+        integer :: N, NN
+        real(PR) :: h
+        real(PR), dimension(:), allocatable :: b, A_val, deric_x, deric_y
+        real(PR), dimension(:,:), allocatable :: A
+        integer, dimension(:), allocatable :: A_col, A_row
+    end type
     real(PR), parameter :: epsilon = 1.d-10
     real(PR), parameter :: F = 157_PR ! en N
     real(PR), parameter :: E = 18d9 ! en Pa
@@ -11,5 +18,5 @@ module const
     ! 1 -> resolution avec dérivée seconde
     ! 2 -> avec dérivée quatrième
     ! 3 -> fléxion 3pts
-    integer, parameter :: cas_init = 1
+    integer, parameter :: cas_init = 3
 end module const
