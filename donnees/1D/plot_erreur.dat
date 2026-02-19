@@ -1,0 +1,4 @@
+set grid
+set logscale x
+set logscale y
+plot "erreur.dat" u 1:2 w lp title "erreur relative"

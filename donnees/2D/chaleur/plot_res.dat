@@ -1,0 +1,6 @@
+plot "sol_2D_1  .dat" u 1:2 w p title "solution à t1"
+replot "sol_2D_2  .dat" u 1:2 w p title "solution à t2"
+replot "sol_2D_3  .dat" u 1:2 w p title "solution à t3"
+replot "sol_2D_4  .dat" u 1:2 w p title "solution à t4"
+replot "sol_2D_5  .dat" u 1:2 w p title "solution à t5"
+
