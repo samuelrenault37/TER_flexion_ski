@@ -41,7 +41,29 @@ module fonct
         close(1)
     end subroutine write_in_file
 
-    subroutine write_exp_val()
+    subroutine write_in_file_2D(file, n_d1, x_d2, N, h, deric_x, deric_y)
+        character(len=*), intent(in) :: file
+        real(PR), dimension(:), intent(in) ::  x_d2, deric_x, deric_y
+        integer, intent(in) :: N, n_d1
+        real(PR), intent(in) :: h
+        integer :: i
+        character(len=3) :: cd1
+
+        write(cd1,'(i1)') n_d1
+
+        open(unit = 1, file = file//cd1//".dat")
+
+        write (1, '(A)') "#abscisse               ordonnée"
+        write (1, *) deric_x(1), deric_y(1)
+        do i = 1,N
+            write (1, *) borne_a_d2 + (i)*(h), x_d2(i)
+        end do
+        write (1, *) deric_x(2), deric_y(2)
+        close(1)
+    end subroutine write_in_file_2D
+
+    subroutine write_exp_val(file)
+        character(len=*), intent(in) :: file
         integer :: N_exp
         real(PR), dimension(:), allocatable  ::  x_exp, y_exp
         integer :: i
@@ -55,7 +77,7 @@ module fonct
 
         y_exp = (/0.000387, -0.002559, -0.006685, -0.01007, -0.01081, -0.01214, -0.01493, -0.01722, -0.0193, -0.02222, -0.02159, -0.0218, -0.02138, -0.02138, -0.02034, -0.01992, -0.01909, -0.01759, -0.01536, -0.01332, -0.0109, -0.007748, -0.002737, 0.001347, 0.005059, 0.005039/)
 
-        open(unit = 1, file = "../doc/exp.dat", action = "write")
+        open(unit = 1, file = file, action = "write")
         write (1, '(A)') "#abscisse               ordonnée"
         do i = 1,N_exp
             write (1, *) x_exp(i), y_exp(i)

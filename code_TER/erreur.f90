@@ -23,6 +23,25 @@ module err
     
     end function f_sol
 
+    function f_sol_2D(d1, d2) result(f_d1_d2)
+        real(PR), intent(in) :: d1, d2
+        real(PR) :: f_d1_d2, L
+        integer :: k
+
+        L = (borne_b - borne_a)
+
+        select case(cas_init)
+        case(4)
+            f_d1_d2 = 0
+            do k = 0,6
+                f_d1_d2 = f_d1_d2 + EXP(-D*((2*REAL(k,PR)+1._PR)**2)*(PI**2)*d1)*(8._PR/((2*REAL(k,PR)+1._PR)*PI)**3)*SIN((2*REAL(k,PR)+1._PR)*PI*d2)
+            end do
+        case default
+            print *, "pas de methode correspondant à ce numéro"
+            stop
+        end select
+    end function f_sol_2D
+
     subroutine print_err(meth, file, cas_sol)
         character(len=*), intent(in) :: file
         integer, intent(in) :: meth, cas_sol
@@ -154,8 +173,35 @@ module err
             x_sol(i) = f_sol(borne_a + h*(i))
         end do
     
-        call write_in_file("../doc/sol.dat", x_sol, N_sol, h, (/0._PR, L/), (/0._PR, 0._PR/))
+        call write_in_file("../donnees/1D/sol.dat", x_sol, N_sol, h, (/0._PR, L/), (/0._PR, 0._PR/))
         
     end subroutine print_sol
+
+    subroutine print_sol_2D(N_sol_d1, N_sol_d2)
+        integer, intent(in) :: N_sol_d1, N_sol_d2
+        real(PR), dimension(N_sol_d2) :: x_sol
+        real(PR) :: h1, h2, L1, L2, d1_k
+        integer :: i, k
+
+        L1 = borne_b_d1-borne_a_d1
+        L2 = borne_b_d2-borne_a_d2
+        h1 = (L1)/(N_sol_d1-1)
+        h2 = (L2)/(N_sol_d2+1)
+
+        select case(cas_init)
+        case(4)
+            do k = 1, N_sol_d1
+                d1_k = borne_a_d1+ (k-1)*h1
+                do i = 1, N_sol_d2
+                    x_sol(i) = f_sol_2D(d1_k, borne_a_d2 + i*h2)
+                end do
+                call write_in_file_2D("../donnees/2D/chaleur/sol_2D_", k, x_sol, N_sol_d2, h2, (/0._PR, L2/), (/0._PR, 0._PR/))
+            end do
+        case default
+            print *, "pas de cas correspondant à ce numéro en 2D"
+            stop
+        end select
+        
+    end subroutine print_sol_2D
 
 end module err
