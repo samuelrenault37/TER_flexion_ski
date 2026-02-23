@@ -10,9 +10,6 @@ contains
         integer :: k
         real(PR) :: Mx, x, I_fs, I_sfs, L, Mx_max, sx_max
 
-        L = (borne_b - borne_a)
-        sl%h = (borne_b-borne_a)/(sl%N+1)
-
         allocate(sl%b(sl%N))
         allocate(sl%A(sl%N,sl%N))
 
@@ -20,6 +17,10 @@ contains
 
         select case(cas_init)
             case(1)
+
+                L = (borne_b - borne_a)
+                sl%h = L/(sl%N+1)
+
                 ! Condition pour la première ligne 
                 sl%A(1,1) = -2
                 sl%A(1,2) = 1
@@ -75,6 +76,10 @@ contains
                 !on obtient : sigma_max =    13039066.941155676      atteint en x =  0.61422845691382766
 
             case(2)
+
+                L = (borne_b - borne_a)
+                sl%h = L/(sl%N+1)
+
                 ! Condition limites tenant compte de Neuman et Derichlet
                 
                 sl%A(1, 1) = 5
@@ -123,6 +128,10 @@ contains
                 !print *, I_fs ! pour vérifier que le coefficient A est bien choisi
 
             case(3)
+
+                L = (borne_b - borne_a)
+                sl%h = L/(sl%N+1)
+
                 ! Condition pour la première ligne 
                 sl%A(1,1) = -2
                 sl%A(1,2) = 1
@@ -162,6 +171,38 @@ contains
                 sl%deric_x(2) = L
                 sl%deric_y(1) = 0
                 sl%deric_y(2) = 0
+            case(4)
+
+                L = (borne_b_d2 - borne_a_d2)
+                sl%h = L/(sl%N+1)
+
+                ! Condition pour la première ligne 
+                sl%A(1,1) = -2
+                sl%A(1,2) = 1
+
+
+                ! Condition pour la dernière ligne
+                sl%A(sl%N, sl%N) = -2
+                sl%A(sl%N,sl%N-1) = 1
+
+                do k = 2, sl%N-1
+
+                    sl%A(k, k-1) = 1
+                    sl%A(k, k  ) = -2
+                    sl%A(k, k+1) = 1
+                    
+                end do
+
+                sl%A = -(D/sl%h**2) * sl%A
+
+                allocate(sl%deric_x(2))
+                allocate(sl%deric_y(2))
+
+                sl%deric_x(1) = 0
+                sl%deric_x(2) = L
+                sl%deric_y(1) = 0
+                sl%deric_y(2) = 0
+
 
             case default
                 print *, "pas d'initialisation associée à ce cas"

@@ -39,7 +39,10 @@ program main
     ! un seul appel est suffisant pour le moment
      
     !call print_sol(1000)
-    call print_sol_2D(5, 9)
+    call print_sol_2D(1000, 10)
+
+    call resol_explicite(1000, 10)
+    !call resol_implicite(1000, 200)
 
     !call free_CSR(sl)
     !call free_syst_lin(sl)

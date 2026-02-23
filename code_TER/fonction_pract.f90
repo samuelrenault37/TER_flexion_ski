@@ -49,7 +49,7 @@ module fonct
         integer :: i
         character(len=3) :: cd1
 
-        write(cd1,'(i1)') n_d1
+        write(cd1,'(i3)') n_d1
 
         open(unit = 1, file = file//cd1//".dat")
 
