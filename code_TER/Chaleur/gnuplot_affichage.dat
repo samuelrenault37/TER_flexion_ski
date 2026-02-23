@@ -1,0 +1,37 @@
+# Affichage de la solution exacte
+reset
+set pm3d map
+set palette rgb 33,13,10
+set view map
+set cbrange [0:1]
+set xlabel "x"
+set ylabel "y"
+set cblabel "T(x,y)"
+do for [k=0:10] {
+    file = sprintf("sol_exacte_2D_%03d.dat", k)
+    set title sprintf("Solution exacte 2D – t = %.2f", k*0.01)
+    splot file u 1:2:3 notitle
+    pause 0.5
+}
+
+# Affichage de la solution approchée
+reset
+set pm3d map
+set palette rgb 33,13,10
+set view map
+set cbrange [0:1]
+set xlabel "x"
+set ylabel "y"
+set cblabel "T_2D(x,y)"
+do for [k=0:10] {
+    file = sprintf("sol_EE_2D_%03d.dat", k)
+    set title sprintf("Solution EE 2D – t = %.2f", k*0.01)
+    splot file u 1:2:3 notitle
+    pause 0.5
+}
+
+# Calcul de la pente d'erreur
+reset
+set logscale xy
+mc(x) = a*x + b
+fit [*:*] mc(x) "erreur_2D.dat" using (log($1)):(log($2)) via a,b
