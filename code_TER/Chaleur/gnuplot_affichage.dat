@@ -34,4 +34,4 @@ do for [k=0:10] {
 reset
 set logscale xy
 mc(x) = a*x + b
-fit [*:*] mc(x) "erreur_2D.dat" using (log($1)):(log($2)) via a,b
+fit [*:*] mc(x) "erreur_2D.dat" using (log($2)):(log($4)) via a,b
