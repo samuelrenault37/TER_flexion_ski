@@ -47,25 +47,36 @@ program chaleur
     end do 
 
     ! -----------------------------
-    ! Solution approchée avec EE /!\ L'erreur ne fonctionne pas
+    ! Solution approchée avec EE
     ! -----------------------------
 
-    h_t = cfl*(1._PR/(2*D*(1._PR/(h_x**2) + 1._PR/(h_y**2))))
+    !h_t = cfl*(1._PR/(2*D*(1._PR/(h_x**2) + 1._PR/(h_y**2))))
 
-    allocate(T_2D(0:imax_x+1, 0:imax_y+1))
-    allocate(Tnp1_2D(0:imax_x+1, 0:imax_y+1))
+    !allocate(T_2D(0:imax_x+1, 0:imax_y+1))
+    !allocate(Tnp1_2D(0:imax_x+1, 0:imax_y+1))
 
     ! Ouverture du fichier pour l'erreur
-    !open(unit = 3, file = 'erreur_2D.dat', ACTION = 'WRITE')
+    open(unit = 10, file = 'err_2D.dat', ACTION = 'WRITE')
 
-    do j = 0, 10
+    do j = 0, 6, 2
 
-        !sum = 0._PR !Pour le calcul d'erreur à la fin
+        sum = 0._PR !Pour le calcul d'erreur à la fin
 
-        tps_2D = j * 0.01_PR
+        !tps_2D = j * 0.01_PR
 
-        write(ct,'(I3.3)') j
-        open(unit=2,file='sol_EE_2D_'//trim(adjustl(ct))//'.dat')
+        tps_2D = 0.05
+
+        imax_x = 5*2**j
+        imax_y = 5*2**j
+        h_x = 1._PR/(imax_x +1)
+        h_y = 1._PR/(imax_y +1)
+        h_t = cfl*(1._PR/(2*D*(1._PR/(h_x**2) + 1._PR/(h_y**2))))
+
+        allocate(T_2D(0:imax_x+1, 0:imax_y+1))
+        allocate(Tnp1_2D(0:imax_x+1, 0:imax_y+1))
+
+        !write(ct,'(I3.3)') j
+        !open(unit=2,file='sol_EE_2D_'//trim(adjustl(ct))//'.dat')
 
         ! CL de T_2D
         do i = 0, imax_x + 1
@@ -123,28 +134,26 @@ program chaleur
 
             do k = 1, imax_y
 
-                write(2,'(E18.8, 4X, E18.8, 4X, E18.8)') i*h_x, k*h_y, T_2D(i,k)
-                !sum = sum + (T_2D(i,k) - Texacte_2D(tps_2D, i*h_x, k*h_y))**2
+                !write(2,'(E18.8, 4X, E18.8, 4X, E18.8)') i*h_x, k*h_y, T_2D(i,k)
+                sum = sum + (T_2D(i,k) - Texacte_2D(tps_2D, i*h_x, k*h_y))**2
                 
             end do 
 
-            write(2, *) ! Pour séparer à chaque fois pour la compréhension Gnuplot
+            !write(2, *) ! Pour séparer à chaque fois pour la compréhension Gnuplot
 
         end do 
 
-        close(2)
+        !close(2)
 
-        !err_2D = SQRT(sum*h_x*h_y)
+        err_2D = SQRT(sum*h_x*h_y)
 
         ! Ecriture des pas de temps et des erreurs
-        !write(3, '(E18.8, 4X, E18.8, 4X, E18.8)') h_x, h_y, err_2D
+        write(10, '(I3, 4X, E18.8, 4X, E18.8, 4X, E18.8)') j, h_x, h_y, err_2D
+
+        deallocate(T_2D, Tnp1_2D)
 
     end do
 
-    !close(3)
-
-    ! -----------------
-    
-    deallocate(T_2D, Tnp1_2D)
+    close(10)
 
 end program chaleur
