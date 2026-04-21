@@ -1,6 +1,7 @@
 module donnees
     implicit none
-    integer, parameter :: PR = 16, epsilon = 1d-30
+    integer, parameter :: PR = 16
+    real(PR), parameter :: epsilon = 1d-30
     integer :: nx, ny, resol, N, n_dirich
     real(PR) :: Lx, Ly, dx, dy, mu, lambda, E, nu, F, f_app
     real(PR), dimension(:), allocatable :: u, x, y, b
