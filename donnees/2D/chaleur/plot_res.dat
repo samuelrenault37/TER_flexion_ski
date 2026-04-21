@@ -1,6 +1,8 @@
-plot "sol_2D_t1  .dat" u 1:2 w p title "solution à t1"
-replot "sol_2D_t2  .dat" u 1:2 w p title "solution à t2"
-replot "sol_2D_t3  .dat" u 1:2 w p title "solution à t3"
-replot "sol_2D_t4  .dat" u 1:2 w p title "solution à t4"
-replot "sol_2D_t5  .dat" u 1:2 w p title "solution à t5"
+plot "sol_2D_t  0.dat" u 1:2 w l title "solution à t0"
+replot "sol_2D_t200.dat" u 1:2 w l title "solution à t_{regardé}"
+
+
+replot "res_solv_2D_t  0.dat" u 1:2 w p title "solution  numérique à t0"
+replot "res_solv_2D_t200.dat" u 1:2 w p title "solution numérique à t_{regardé}"
+
 

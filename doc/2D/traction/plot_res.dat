@@ -1,0 +1,4 @@
+set grid
+set xlabel "x"
+set ylabel "y"
+plot "res_sol_num.dat" 
