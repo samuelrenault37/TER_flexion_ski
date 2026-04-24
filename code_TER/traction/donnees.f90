@@ -1,10 +1,11 @@
 module donnees
     implicit none
     integer, parameter :: PR = 16
-    real(PR), parameter :: epsilon = 1d-30
-    integer :: nx, ny, resol, N, n_dirich
+    real(PR), parameter :: epsilon = 1d-14
+    integer :: nx, ny, resol, N, n_dirich, NN
     real(PR) :: Lx, Ly, dx, dy, mu, lambda, E, nu, F, f_app
-    real(PR), dimension(:), allocatable :: u, x, y, b
+    real(PR), dimension(:), allocatable :: u, x, y, b, A_val
+    integer, dimension(:), allocatable :: A_col, A_row
     real(PR), dimension(:,:), allocatable :: A, dirich
 contains
 

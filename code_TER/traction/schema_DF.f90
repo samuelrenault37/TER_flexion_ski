@@ -24,7 +24,7 @@ contains
 
     subroutine init_sl_cl()
         integer :: i, n_block
-        real(PR), dimension(2*nx, 2*nx) :: M, N, Q, PM2, M1, P1, Q_1, P1_1, P2_1, P3_1, Q_ad, P1_ad, Q_d, M1_d, M2_d, M3_d
+        real(PR), dimension(2*nx, 2*nx) :: M, N, Q, PM2, M1, P1, Q_1, P1_1, P2_1, PM3, Q_ad, P1_ad, Q_d, M1_d, M2_d
 
         ! initialisation des CL de dirichlet
 
@@ -144,7 +144,6 @@ contains
 
         P1_1(n_block-1, n_block-1:n_block) = (/(11*lambda + 15*mu)/(4*dy**2), -4*lambda/(dx*dy)/)
         P1_1(n_block, n_block-1:n_block) = (/-4*mu/(dx*dy), (11*lambda*(lambda + mu) + 4*(lambda + 2*mu)**2)/(4*(lambda + 2*mu)*dy**2)/)
-        ! ^ peut etre une source d'erreur
 
         ! print*, "P1_1 :"
         ! call aff_mat(P1_1)
@@ -156,29 +155,27 @@ contains
 
         P2_1(n_block-1, n_block-1:n_block) = (/-7*(lambda + mu)/(4*dy**2), lambda/(dx*dy)/)
         P2_1(n_block, n_block-1:n_block) = (/mu/(dx*dy), (-7*lambda*(lambda + mu))/(4*(lambda + 2*mu)*dy**2)/)
-        ! ^ peut etre une source d'erreur
 
         ! print*, "P2_1 :"
         ! call aff_mat(P2_1)
 
-        P3_1 = 0
+        PM3 = 0
 
-        P3_1(1, 1) = (lambda + mu)/(4*dy**2)
-        P3_1(2, 2) = (lambda*(lambda + mu))/(4*(lambda + 2*mu)*dy**2)
+        PM3(1, 1) = (lambda + mu)/(4*dy**2)
+        PM3(2, 2) = (lambda*(lambda + mu))/(4*(lambda + 2*mu)*dy**2)
 
-        P3_1(n_block-1, n_block-1) = (lambda + mu)/(4*dy**2)
-        P3_1(n_block, n_block) = (lambda*(lambda + mu))/(4*(lambda + 2*mu)*dy**2)
-        ! ^ peut etre une source d'erreur
+        PM3(n_block-1, n_block-1) = (lambda + mu)/(4*dy**2)
+        PM3(n_block, n_block) = (lambda*(lambda + mu))/(4*(lambda + 2*mu)*dy**2)
 
-        ! print*, "P3_1 :"
-        ! call aff_mat(P3_1)
+        ! print*, "PM3 :"
+        ! call aff_mat(PM3)
 
         ! remplissage de la première ligne
 
         A(1:n_block, 1:n_block) = Q_1
         A(1:n_block, n_block+1:n_block*2) = P1_1
         A(1:n_block, n_block*2+1:n_block*3) = P2_1
-        A(1:n_block, n_block*3+1:n_block*4) = P3_1
+        A(1:n_block, n_block*3+1:n_block*4) = PM3
 
         ! remplissage de la deuxième ligne (rien à faire grâce aux CL de dirichlet nulles)
 
@@ -270,20 +267,9 @@ contains
         ! print*, "M2_d :"
         ! call aff_mat(M2_d)
 
-        M3_d = 0
-
-        M3_d(1, 1) = (lambda + mu)/(4*dy**2)
-        M3_d(2, 2) = (lambda*(lambda + mu))/(4*(lambda + 2*mu)*dy**2)
-
-        M3_d(n_block-1, n_block-1) = (lambda + mu)/(4*dy**2)
-        M3_d(n_block, n_block) = (lambda*(lambda + mu))/(4*(lambda + 2*mu)*dy**2)
-
-        ! print*, "M3_d :"
-        ! call aff_mat(M3_d)
-
         ! remplissage de la dernière ligne
 
-        A(n_block*(ny-1)+1:n_block*ny, n_block*(ny-4)+1:n_block*(ny-3)) = M3_d
+        A(n_block*(ny-1)+1:n_block*ny, n_block*(ny-4)+1:n_block*(ny-3)) = PM3
         A(n_block*(ny-1)+1:n_block*ny, n_block*(ny-3)+1:n_block*(ny-2)) = M2_d
         A(n_block*(ny-1)+1:n_block*ny, n_block*(ny-2)+1:n_block*(ny-1)) = M1_d
         A(n_block*(ny-1)+1:n_block*ny, n_block*(ny-1)+1:n_block*ny) = Q_d

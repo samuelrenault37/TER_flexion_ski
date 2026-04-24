@@ -33,15 +33,19 @@ subroutine meth_lapack()
 
         call convert_A_CSR(A_val, A_col, A_row, NN)
         
-        call matvec_csr(NN, A_val, A_col, A_row, x, Ap)
+        call matvec_csr(NN, A_val, A_col, A_row, u, Ap)
         r = b - Ap
         p = r
         rho_cur = dot_product(r, r)
-
+        
         do i = 1, max_iter
             call matvec_csr(NN, A_val, A_col, A_row, p, Ap)
-            alpha = rho_cur / dot_product(p, Ap)
-            x = x + alpha * p
+            ! print*, i
+            ! if (i == 639) then
+            !     print*, dot_product( p, Ap)
+            ! end if
+            alpha = rho_cur / dot_product(p, Ap) ! -> division par zero ici a partir d'un certain rang
+            u = u + alpha * p
             r = r - alpha * Ap
             rho_new = dot_product(r, r)
 
@@ -94,41 +98,35 @@ subroutine meth_lapack()
         real(PR), dimension(:), allocatable, intent(out):: A_val
         integer, dimension(:), allocatable, intent(out):: A_col, A_row
         integer :: i, j, k, r, compteur
-        real(PR) :: prec
 
         call recup_NN(NN)
 
         allocate(A_val(NN)) !toutes les valeurs non nuls de la matrice en ligne
-        allocate(A_col(NN)) !contient la colonnes de chacune de ses valeurs
+        allocate(A_col(NN)) !contient la colonnes de chacune de ces valeurs
         allocate(A_row(N+1)) !pointeurs de début de chaque ligne (dans les autres tableaux)
-
+        
+        A_row = -1
         k = 1
-        r = 2
-        compteur = 1
-        A_row(1) = compteur
-        prec = 0
+        r = 0
+        compteur = 0
         
         do i = 1,N
+            r = r+1
             do j = 1,N
                 if(ABS(A(i,j)) > epsilon) then
                     A_val(k) = A(i,j)
                     A_col(k) = j
                     k = k +1
                     compteur = compteur + 1
-                else
-                    if (ABS(prec) > epsilon) then
+                    if (A_row(r) == -1) then
                         A_row(r) = compteur
-                        r = r + 1
                     end if
                 end if
-                prec = A(i,j)
             end do
         end do
-
-        if (r < N+2) then
-            A_row(N+1) = compteur
-        end if
         
+        A_row(N+1) = compteur + 1
+    
     end subroutine convert_A_CSR
 
     subroutine meth_piv()

@@ -1,8 +1,8 @@
 1 #Lx
 3 #Ly
-15 #nx
-30 #ny
-2 #resol  1 -> lapack (ne marche pas encore), 2 -> pivot de gauss, 3 -> gradient conjugué (ne marche pas encore)
-72000000000 #E
+20 #nx
+25 #ny
+2 #resol  1 -> lapack (ne marche pas encore -> etonnant), 2 -> pivot de gauss, 3 -> gradient conjugué (ne marche pas encore -> probablemnt pas adapté)
+7200000 #E
 0.3 #nu
-42000000000 #F
+4200000 #F
