@@ -169,7 +169,7 @@ module meth
             call init_sol_2D(sol_n)
 
             do k = 1, N_d1
-                call write_in_file_2D("../donnees/2D/chaleur/res_solv_2D_t", k-1, sol_n, N_d2, h2, deric_x, deric_y)
+                call write_in_file_2D("../../donnees/2D/chaleur/res_solv_2D_t", k-1, sol_n, N_d2, h2, deric_x, deric_y)
                 sol_np1(1) = ((h1*D)/h2**2)*(sol_n(2)-2*sol_n(1)+deric_y(1))+sol_n(1)
                 do i = 2, N_d2-1
                     sol_np1(i) = ((h1*D)/h2**2)*(sol_n(i+1)-2*sol_n(i)+sol_n(i-1))+sol_n(i)
@@ -212,7 +212,7 @@ module meth
             end do
 
             do i = 1, N_d1
-                call write_in_file_2D("../donnees/2D/chaleur/res_solv_2D_t", i-1, sol_n, sl%N, sl%h, sl%deric_x, sl%deric_y)
+                call write_in_file_2D("../../donnees/2D/chaleur/res_solv_2D_t", i-1, sol_n, sl%N, sl%h, sl%deric_x, sl%deric_y)
 
                 sl%b = sol_n
 
@@ -220,7 +220,7 @@ module meth
                 sol_n = sol_np1
                 
             end do
-            call write_in_file_2D("../donnees/2D/chaleur/res_solv_2D_t", N_d1, sol_n, sl%N, sl%h, sl%deric_x, sl%deric_y)
+            call write_in_file_2D("../../donnees/2D/chaleur/res_solv_2D_t", N_d1, sol_n, sl%N, sl%h, sl%deric_x, sl%deric_y)
         case default
             print *, "pas de cas de resolution correspondant à ce numéro"
             stop

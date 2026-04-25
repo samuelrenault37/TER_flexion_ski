@@ -173,7 +173,7 @@ module err
             x_sol(i) = f_sol(borne_a + h*(i))
         end do
     
-        call write_in_file("../donnees/1D/sol.dat", x_sol, N_sol, h, (/0._PR, L/), (/0._PR, 0._PR/))
+        call write_in_file("../../donnees/1D/sol.dat", x_sol, N_sol, h, (/0._PR, L/), (/0._PR, 0._PR/))
         
     end subroutine print_sol
 
@@ -195,7 +195,7 @@ module err
                 do i = 1, N_sol_d2
                     x_sol(i) = f_sol_2D(d1_k, borne_a_d2 + i*h2)
                 end do
-                call write_in_file_2D("../donnees/2D/chaleur/sol_2D_t", k-1, x_sol, N_sol_d2, h2, (/0._PR, L2/), (/0._PR, 0._PR/))
+                call write_in_file_2D("../../donnees/2D/chaleur/sol_2D_t", k-1, x_sol, N_sol_d2, h2, (/0._PR, L2/), (/0._PR, 0._PR/))
             end do
         case default
             print *, "pas de cas correspondant à ce numéro en 2D"
