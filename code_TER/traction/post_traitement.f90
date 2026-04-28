@@ -8,7 +8,7 @@ contains
     subroutine ecrit_sol_num()
         integer :: i, j
 
-        open(unit = 1, file = "../../donnees/2D/flexion/traction/res_sol_num.dat", action = "write")
+        open(unit = 1, file = "../../donnees/2D/traction/res_sol_num.dat", action = "write")
         do i = 1, n_dirich
             write (1,*) dirich(i,1), dirich(i, 2)
         end do

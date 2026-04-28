@@ -211,9 +211,9 @@ contains
         P1_ad = P1
 
         P1_ad(1, 2:6) = P1_ad(1, 2:6) + (lambda + mu)/(4*dx*dy)*(/-3, 0, 4, 0, -1/)
-        P1_ad(2, 1:5) = P1_ad(2, 1:5) + (lambda*(lambda + mu))/(4*dx*dy)*(/-3, 0, 4, 0, -1/)
+        P1_ad(2, 1:5) = P1_ad(2, 1:5) + (lambda + mu)/(4*dx*dy)*(/-3, 0, 4, 0, -1/)
         P1_ad(n_block-1, n_block-4:n_block) = P1_ad(n_block-1, n_block-4:n_block) + (lambda + mu)/(4*dx*dy)*(/1, 0, -4, 0, 3/)
-        P1_ad(n_block, n_block-5:n_block-1) = P1_ad(n_block, n_block-5:n_block-1) + (lambda*(lambda + mu))/(4*dx*dy)*(/1, 0, -4, 0, 3/)
+        P1_ad(n_block, n_block-5:n_block-1) = P1_ad(n_block, n_block-5:n_block-1) + (lambda + mu)/(4*dx*dy)*(/1, 0, -4, 0, 3/)
 
         ! print*, "P1_ad:"
         ! call aff_mat(P1_ad)
