@@ -8,9 +8,10 @@ program main
 
     call calc_DF
     print *, MAXVAL(ABS(MATMUL(A, u)- b))  !resolution du système linéaire fonctionne bien
+
+    call calc_contrainte
     
     call ecrit_sol_num
-
 
     ! sert pour le debug
     ! allocate(A(4,4), u(4), b(4))

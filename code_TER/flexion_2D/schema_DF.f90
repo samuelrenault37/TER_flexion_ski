@@ -297,10 +297,43 @@ contains
         b = 0
         do i = 1, nx
             b(n_block*(ny-1)+2*i) = (2*f_rep(x(i)))/dy
+            ! print*, (2*f_rep(x(i)))/dy
         end do
         
 
     end subroutine init_sl_cl
+
+    subroutine calc_contrainte
+        integer :: n_block, i, j
+
+        n_block = 2*nx
+
+        select case(type_contrainte)
+        case(1)
+            sigma = 0
+
+            do i = 2,nx-1
+                sigma(i) = (lambda +2*mu)*(u(2*i+1)-u(2*(i-2)+1))/(2*dx) + lambda*(u(n_block+2*i)-u(2*i))/dy
+            end do
+
+            do j = 2,ny-1
+                sigma(nx*(j-1)+1) = (lambda +2*mu)*(u(n_block*(j-1)+3)-u(n_block*(j-1)+1))/dx + lambda*(u(n_block*(j)+2)-u(n_block*(j-2)+2))/(2*dy)
+                do i = 2,nx-1
+                    sigma(nx*(j-1)+i) = (lambda +2*mu)*(u(n_block*(j-1)+2*i+1)-u(n_block*(j-1)+2*(i-2)+1))/(2*dx) + lambda*(u(n_block*(j)+2*i)-u(n_block*(j-2)+2*i))/(2*dy)
+                end do
+                sigma(nx*(j-1)+nx) = (lambda +2*mu)*(u(n_block*(j-1)+2*(nx-1)+1)-u(n_block*(j-1)+2*(nx-2)+1))/dx + lambda*(u(n_block*(j)+2*nx)-u(n_block*(j-2)+2*nx))/(2*dy)
+            end do
+
+            do i = 2,nx-1
+                sigma(nx*(ny-1)+i) = (lambda +2*mu)*(u(n_block*(ny-1)+2*i+1)-u(n_block*(ny-1)+2*(i-2)+1))/(2*dx) + lambda*(u(n_block*(ny-1)+2*i)-u(n_block*(ny-2)+2*i))/dy
+            end do
+
+        case(2)
+        
+        end select
+    
+        
+    end subroutine calc_contrainte
 
     subroutine aff_mat(M)
         real(PR), dimension(:,:), intent(in) :: M
