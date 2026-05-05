@@ -310,11 +310,12 @@ contains
 
         select case(type_contrainte)
         case(1)
-            sigma = 0
 
+            sigma(1) = (lambda +2*mu)*(u(3)-u(1))/dx + lambda*(u(n_block+2)-u(2))/dy
             do i = 2,nx-1
                 sigma(i) = (lambda +2*mu)*(u(2*i+1)-u(2*(i-2)+1))/(2*dx) + lambda*(u(n_block+2*i)-u(2*i))/dy
             end do
+            sigma(nx) = (lambda +2*mu)*(u(2*(nx-1)+1)-u(2*(nx-2)+1))/dx + lambda*(u(n_block+2*nx)-u(2*nx))/dy
 
             do j = 2,ny-1
                 sigma(nx*(j-1)+1) = (lambda +2*mu)*(u(n_block*(j-1)+3)-u(n_block*(j-1)+1))/dx + lambda*(u(n_block*(j)+2)-u(n_block*(j-2)+2))/(2*dy)
@@ -324,12 +325,56 @@ contains
                 sigma(nx*(j-1)+nx) = (lambda +2*mu)*(u(n_block*(j-1)+2*(nx-1)+1)-u(n_block*(j-1)+2*(nx-2)+1))/dx + lambda*(u(n_block*(j)+2*nx)-u(n_block*(j-2)+2*nx))/(2*dy)
             end do
 
+            sigma(nx*(ny-1)+1) = (lambda +2*mu)*(u(n_block*(ny-1)+3)-u(n_block*(ny-1)+1))/dx + lambda*(u(n_block*(ny-1)+2)-u(n_block*(ny-2)+2))/dy
             do i = 2,nx-1
                 sigma(nx*(ny-1)+i) = (lambda +2*mu)*(u(n_block*(ny-1)+2*i+1)-u(n_block*(ny-1)+2*(i-2)+1))/(2*dx) + lambda*(u(n_block*(ny-1)+2*i)-u(n_block*(ny-2)+2*i))/dy
             end do
-
+            sigma(nx*(ny-1)+nx) = (lambda +2*mu)*(u(n_block*(ny-1)+2*(nx-1)+1)-u(n_block*(ny-1)+2*(nx-2)+1))/dx + lambda*(u(n_block*(ny-1)+2*nx)-u(n_block*(ny-2)+2*nx))/dy
+            
         case(2)
-        
+
+            sigma(1) = mu*((u(n_block+1)-u(1))/dy + (u(4)-u(2))/dx)
+            do i = 2,nx-1
+                sigma(i) = mu*((u(n_block+2*(i-1)+1)-u(2*(i-1)+1))/dy + (u(2*(i+1))-u(2*(i-1)))/(2*dx))
+            end do
+            sigma(nx) = mu*((u(n_block+2*(nx-1)+1)-u(2*(nx-1)+1))/dy + (u(2*nx)-u(2*(nx-1)))/dx)
+            
+            do j = 2,ny-1
+                sigma(nx*(j-1)+1) = mu*((u(n_block*j+1)-u(n_block*(j-2)+1))/(2*dy) + (u(n_block*(j-1)+4)-u(n_block*(j-1)+2))/dx)
+                do i = 2,nx-1
+                    sigma(nx*(j-1)+i) = mu*((u(n_block*j+2*(i-1)+1)-u(n_block*(j-2)+2*(i-1)+1))/(2*dy) + (u(n_block*(j-1)+2*(i+1))-u(n_block*(j-1)+2*(i-1)))/(2*dx))
+                end do
+                sigma(nx*(j-1)+nx) = mu*((u(n_block*j+2*(nx-1)+1)-u(n_block*(j-2)+2*(nx-1)+1))/(2*dy) + (u(n_block*(j-1)+2*nx)-u(n_block*(j-1)+2*(nx-1)))/dx)
+            end do
+
+            sigma(nx*(ny-1)+1) = mu*((u(n_block*(ny-1)+1)-u(n_block*(ny-2)+1))/dy + (u(n_block*(ny-1)+4)-u(n_block*(ny-1)+2))/dx)
+            do i = 2,nx-1
+                sigma(nx*(ny-1)+i) = mu*((u(n_block*(ny-1)+2*(i-1)+1)-u(n_block*(ny-2)+2*(i-1)+1))/dy + (u(n_block*(ny-1)+2*(i+1))-u(n_block*(ny-1)+2*(i-1)))/(2*dx))
+            end do
+            sigma(nx*(ny-1)+nx) = mu*((u(n_block*(ny-1)+2*(nx-1)+1)-u(n_block*(ny-2)+2*(nx-1)+1))/dy + (u(n_block*(ny-1)+2*nx)-u(n_block*(ny-1)+2*(nx-1)))/dx)
+            
+        case(3)
+
+            sigma(1) = lambda*(u(3)-u(1))/dx + (lambda +2*mu)*(u(n_block+2)-u(2))/dy
+            do i = 2,nx-1
+                sigma(i) = lambda*(u(2*i+1)-u(2*(i-2)+1))/(2*dx) + (lambda +2*mu)*(u(n_block+2*i)-u(2*i))/dy
+            end do
+            sigma(nx) = lambda*(u(2*(nx-1)+1)-u(2*(nx-2)+1))/dx + (lambda +2*mu)*(u(n_block+2*nx)-u(2*nx))/dy
+
+            do j = 2,ny-1
+                sigma(nx*(j-1)+1) = lambda*(u(n_block*(j-1)+3)-u(n_block*(j-1)+1))/dx + (lambda +2*mu)*(u(n_block*(j)+2)-u(n_block*(j-2)+2))/(2*dy)
+                do i = 2,nx-1
+                    sigma(nx*(j-1)+i) = lambda*(u(n_block*(j-1)+2*i+1)-u(n_block*(j-1)+2*(i-2)+1))/(2*dx) + (lambda +2*mu)*(u(n_block*(j)+2*i)-u(n_block*(j-2)+2*i))/(2*dy)
+                end do
+                sigma(nx*(j-1)+nx) = lambda*(u(n_block*(j-1)+2*(nx-1)+1)-u(n_block*(j-1)+2*(nx-2)+1))/dx + (lambda +2*mu)*(u(n_block*(j)+2*nx)-u(n_block*(j-2)+2*nx))/(2*dy)
+            end do
+
+            sigma(nx*(ny-1)+1) = lambda*(u(n_block*(ny-1)+3)-u(n_block*(ny-1)+1))/dx + (lambda +2*mu)*(u(n_block*(ny-1)+2)-u(n_block*(ny-2)+2))/dy
+            do i = 2,nx-1
+                sigma(nx*(ny-1)+i) = lambda*(u(n_block*(ny-1)+2*i+1)-u(n_block*(ny-1)+2*(i-2)+1))/(2*dx) + (lambda +2*mu)*(u(n_block*(ny-1)+2*i)-u(n_block*(ny-2)+2*i))/dy
+            end do
+            sigma(nx*(ny-1)+nx) = lambda*(u(n_block*(ny-1)+2*(nx-1)+1)-u(n_block*(ny-1)+2*(nx-2)+1))/dx + (lambda +2*mu)*(u(n_block*(ny-1)+2*nx)-u(n_block*(ny-2)+2*nx))/dy 
+
         end select
     
         
