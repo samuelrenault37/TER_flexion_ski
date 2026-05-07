@@ -5,6 +5,7 @@
 5 #ny
 2 #resol  1 -> lapack (ne marche pas encore -> etonnant), 2 -> pivot de gauss, 3 -> gradient conjugué (ne marche pas encore -> probablement pas adapté)
 1 #type de contrainte 1 -> xx, 2-> xy, 3 -> yy
+1 #type de deformation 1 -> xx, 2-> xy, 3 -> yy
 9000000000 #E
 0.35 #nu
 157 #F

@@ -9,9 +9,23 @@ program main
     call calc_DF
     print *, MAXVAL(ABS(MATMUL(A, u)- b))  !resolution du système linéaire fonctionne bien
 
-    call calc_contrainte
+    call calc_contrainte(type_contrainte, sigma)
+
+    call calc_eps(type_deformation, eps)
     
-    call ecrit_sol_num
+    call ecrit_sol_num_posi
+
+    call ecrit_sol_num_u
+
+    call ecrit_sol_num_v
+
+    call ecrit_sol_num_cont_pt
+
+    call ecrit_sol_num_zoom
+
+    call ecrit_sol_num_eps
+
+    call ecrit_resume_zoom
 
     ! sert pour le debug
     ! allocate(A(4,4), u(4), b(4))
@@ -25,6 +39,6 @@ program main
     
     ! deallocate(A, u, b)
 
-    deallocate(u, x, y, b, A)
+    deallocate(u, x, y, b, A, sigma, eps)
     
 end program main

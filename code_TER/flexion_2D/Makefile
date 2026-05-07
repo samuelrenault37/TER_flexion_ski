@@ -15,7 +15,7 @@ fonctions.o : fonctions.f90 donnees.o
 schema_DF.o : schema_DF.f90 fonctions.o donnees.o mod_algebre.o
 	$(F90) $(FFLAGS) -c schema_DF.f90
 
-post_traitement.o : post_traitement.f90 fonctions.o donnees.o
+post_traitement.o : post_traitement.f90 fonctions.o donnees.o schema_DF.o
 	$(F90) $(FFLAGS) -c post_traitement.f90
 
 main.o : main.f90 post_traitement.o schema_DF.o donnees.o

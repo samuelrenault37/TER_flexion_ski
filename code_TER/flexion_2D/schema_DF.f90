@@ -303,7 +303,9 @@ contains
 
     end subroutine init_sl_cl
 
-    subroutine calc_contrainte
+    subroutine calc_contrainte(type_contrainte, sigma)
+        integer, intent(in) :: type_contrainte
+        real(PR), dimension(nx*ny), intent(out) :: sigma
         integer :: n_block, i, j
 
         n_block = 2*nx
@@ -379,6 +381,84 @@ contains
     
         
     end subroutine calc_contrainte
+
+    subroutine calc_eps(type_deformation, eps)
+        integer, intent(in) :: type_deformation
+        real(PR), dimension(nx*ny), intent(out) :: eps
+        integer :: n_block, i, j
+
+        n_block = 2*nx
+
+        select case(type_deformation)
+        case(1)
+
+            eps(1) = (u(3)-u(1))/dx
+            do i = 2,nx-1
+                eps(i) = (u(2*i+1)-u(2*(i-2)+1))/(2*dx)
+            end do
+            eps(nx) = (u(2*(nx-1)+1)-u(2*(nx-2)+1))/dx
+
+            do j = 2,ny-1
+                eps(nx*(j-1)+1) = (u(n_block*(j-1)+3)-u(n_block*(j-1)+1))/dx
+                do i = 2,nx-1
+                    eps(nx*(j-1)+i) = (u(n_block*(j-1)+2*i+1)-u(n_block*(j-1)+2*(i-2)+1))/(2*dx)
+                end do
+                eps(nx*(j-1)+nx) = (u(n_block*(j-1)+2*(nx-1)+1)-u(n_block*(j-1)+2*(nx-2)+1))/dx
+            end do
+
+            eps(nx*(ny-1)+1) = (u(n_block*(ny-1)+3)-u(n_block*(ny-1)+1))/dx
+            do i = 2,nx-1
+                eps(nx*(ny-1)+i) = (u(n_block*(ny-1)+2*i+1)-u(n_block*(ny-1)+2*(i-2)+1))/(2*dx)
+            end do
+            eps(nx*(ny-1)+nx) = (u(n_block*(ny-1)+2*(nx-1)+1)-u(n_block*(ny-1)+2*(nx-2)+1))/dx
+            
+        case(2)
+
+            eps(1) = 0.5_PR*((u(n_block+1)-u(1))/dy + (u(4)-u(2))/dx)
+            do i = 2,nx-1
+                eps(i) = 0.5_PR*((u(n_block+2*(i-1)+1)-u(2*(i-1)+1))/dy + (u(2*(i+1))-u(2*(i-1)))/(2*dx))
+            end do
+            eps(nx) = 0.5_PR*((u(n_block+2*(nx-1)+1)-u(2*(nx-1)+1))/dy + (u(2*nx)-u(2*(nx-1)))/dx)
+            
+            do j = 2,ny-1
+                eps(nx*(j-1)+1) = 0.5_PR*((u(n_block*j+1)-u(n_block*(j-2)+1))/(2*dy) + (u(n_block*(j-1)+4)-u(n_block*(j-1)+2))/dx)
+                do i = 2,nx-1
+                    eps(nx*(j-1)+i) = 0.5_PR*((u(n_block*j+2*(i-1)+1)-u(n_block*(j-2)+2*(i-1)+1))/(2*dy) + (u(n_block*(j-1)+2*(i+1))-u(n_block*(j-1)+2*(i-1)))/(2*dx))
+                end do
+                eps(nx*(j-1)+nx) = 0.5_PR*((u(n_block*j+2*(nx-1)+1)-u(n_block*(j-2)+2*(nx-1)+1))/(2*dy) + (u(n_block*(j-1)+2*nx)-u(n_block*(j-1)+2*(nx-1)))/dx)
+            end do
+
+            eps(nx*(ny-1)+1) = 0.5_PR*((u(n_block*(ny-1)+1)-u(n_block*(ny-2)+1))/dy + (u(n_block*(ny-1)+4)-u(n_block*(ny-1)+2))/dx)
+            do i = 2,nx-1
+                eps(nx*(ny-1)+i) = 0.5_PR*((u(n_block*(ny-1)+2*(i-1)+1)-u(n_block*(ny-2)+2*(i-1)+1))/dy + (u(n_block*(ny-1)+2*(i+1))-u(n_block*(ny-1)+2*(i-1)))/(2*dx))
+            end do
+            eps(nx*(ny-1)+nx) = 0.5_PR*((u(n_block*(ny-1)+2*(nx-1)+1)-u(n_block*(ny-2)+2*(nx-1)+1))/dy + (u(n_block*(ny-1)+2*nx)-u(n_block*(ny-1)+2*(nx-1)))/dx)
+            
+        case(3)
+
+            eps(1) = (u(n_block+2)-u(2))/dy
+            do i = 2,nx-1
+                eps(i) = (u(n_block+2*i)-u(2*i))/dy
+            end do
+            eps(nx) = (u(n_block+2*nx)-u(2*nx))/dy
+
+            do j = 2,ny-1
+                eps(nx*(j-1)+1) = (u(n_block*(j)+2)-u(n_block*(j-2)+2))/(2*dy)
+                do i = 2,nx-1
+                    eps(nx*(j-1)+i) = (u(n_block*(j)+2*i)-u(n_block*(j-2)+2*i))/(2*dy)
+                end do
+                eps(nx*(j-1)+nx) = (u(n_block*(j)+2*nx)-u(n_block*(j-2)+2*nx))/(2*dy)
+            end do
+
+            eps(nx*(ny-1)+1) = (u(n_block*(ny-1)+2)-u(n_block*(ny-2)+2))/dy
+            do i = 2,nx-1
+                eps(nx*(ny-1)+i) = (u(n_block*(ny-1)+2*i)-u(n_block*(ny-2)+2*i))/dy
+            end do
+            eps(nx*(ny-1)+nx) = (u(n_block*(ny-1)+2*nx)-u(n_block*(ny-2)+2*nx))/dy 
+
+        end select
+    
+    end subroutine calc_eps
 
     subroutine aff_mat(M)
         real(PR), dimension(:,:), intent(in) :: M
