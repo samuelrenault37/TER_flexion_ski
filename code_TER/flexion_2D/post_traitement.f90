@@ -42,7 +42,7 @@ contains
         open(unit = 1, file = "../../donnees/2D/flexion/res_sol_num_v.dat", action = "write")
         do j = 1, ny
             do i = 74, 78
-                write (1,*) x(i) + u((j-1)*2*nx+2*i-1), y(j) + u((j-1)*2*nx+2*i), u((j-1)*2*nx+2*i)
+                write (1,*) x(i) + u((j-1)*2*nx+2*i-1), y(j) + u((j-1)*2*nx+2*i), u((j-1)*2*nx+2*i)-u(2*76)
             end do
         end do
 
@@ -119,8 +119,8 @@ contains
                 write (1,*) "posi y : ", y(j) + u((j-1)*2*nx+2*i), "en m"
                 write (1,*) "depl u : ", u((j-1)*2*nx+2*i-1), "en m"
                 write (1,*) "depl u adimentionalisé : ", u((j-1)*2*nx+2*i-1)/0.0315_PR
-                write (1,*) "delp v : ", u((j-1)*2*nx+2*i), "en m"
-                write (1,*) "delp v adimentionalisé : ", u((j-1)*2*nx+2*i)/0.0315_PR
+                write (1,*) "delp v : ", u((j-1)*2*nx+2*i)-u(2*76), "en m"
+                write (1,*) "delp v adimentionalisé : ", (u((j-1)*2*nx+2*i)-u(2*76))/0.0315_PR
                 write (1,*) "eps_xx : ", eps_xx(nx*(j-1)+i)
                 write (1,*) "eps_xy : ", eps_xy(nx*(j-1)+i)
                 write (1,*) "eps_yy : ", eps_yy(nx*(j-1)+i)
