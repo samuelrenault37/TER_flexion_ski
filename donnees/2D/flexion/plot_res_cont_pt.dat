@@ -1,0 +1,16 @@
+set grid
+set xrange [0.75725:0.78875]
+set yrange [-0.014281585:-0.009181585]
+set size ratio -1
+set xlabel "x" font "Arial,30"
+set ylabel "y" font "Arial,30" rotate by 0 offset 0,0
+set xtics font ",14"
+set ytics font ",14"
+set cbtics font ",14"
+set key font "Arial,20"
+
+set style data points
+set palette rgbformulae 33,13,10
+set cblabel "σ_{xx} en Pa" font "Arial,30" rotate by 0 offset -11,-10
+
+plot "res_sol_num_cont_pt.dat" using 1:2:3 with points pt 5 ps 0.75 palette title "position des points du maillage après chargement"

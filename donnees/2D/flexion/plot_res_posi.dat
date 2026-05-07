@@ -1,0 +1,12 @@
+set grid
+set xrange [-0.2:1.4]
+set yrange [-0.5:0.2]
+set size ratio -1
+set xlabel "x" font "Arial,30"
+set ylabel "y" font "Arial,30" rotate by 0 offset 0,0
+set xtics font ",14"
+set ytics font ",14"
+set cbtics font ",14"
+set key font "Arial,20"
+
+plot "res_sol_num.dat" u 1:2 w p title "position des points du maillage après chargement"

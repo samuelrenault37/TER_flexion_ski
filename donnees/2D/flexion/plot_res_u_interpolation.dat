@@ -1,0 +1,17 @@
+set grid
+set xrange [0.75725:0.78875]
+set yrange [-0.014281585:-0.009181585]
+set size ratio -1
+set xlabel "x" font "Arial,30"
+set ylabel "y" font "Arial,30" rotate by 0 offset -4,0
+set xtics font ",14"
+set ytics font ",14"
+set cbtics font ",14"
+
+
+set dgrid3d 1000,1000 splines
+set pm3d map
+set palette rgb 33,13,10
+set cblabel "u en m" font "Arial,30" rotate by 0 offset -14,-8
+
+splot 'res_sol_num_u.dat' using 1:2:3
